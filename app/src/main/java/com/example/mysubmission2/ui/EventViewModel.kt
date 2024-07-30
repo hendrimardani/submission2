@@ -5,7 +5,7 @@ import com.example.mysubmission2.data.EventRepository
 
 class EventViewModel(private val eventRepository: EventRepository) : ViewModel() {
 
-    fun getListEvents() = eventRepository.getListEvents()
+    fun getUpComing() = eventRepository.getUpComing()
 
 
 }

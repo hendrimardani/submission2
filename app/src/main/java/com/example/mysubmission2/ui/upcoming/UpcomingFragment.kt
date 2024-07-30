@@ -37,7 +37,7 @@ class UpcomingFragment : Fragment() {
             factory
         }
 
-        viewModel.getListEvents().observe(viewLifecycleOwner) { result ->
+        viewModel.getUpComing().observe(viewLifecycleOwner) { result ->
             if (result != null) {
                 when (result) {
                     is Result.Loading -> {

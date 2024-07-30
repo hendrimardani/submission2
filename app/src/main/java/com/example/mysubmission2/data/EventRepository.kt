@@ -29,7 +29,7 @@ class EventRepository private constructor(
         }
     }
 
-    fun getListEvents(): LiveData<Result<List<EventEntity>>> {
+    fun getUpComing(): LiveData<Result<List<EventEntity>>> {
         result.value = Result.Loading
         val client = apiService.getUpcoming()
         client.enqueue(object : Callback<UpcomingResponse> {
