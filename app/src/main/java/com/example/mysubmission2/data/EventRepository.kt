@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import com.example.mysubmission2.data.local.entity.EventEntity
 import com.example.mysubmission2.data.local.room.EventDao
+import com.example.mysubmission2.data.remote.response.FinishedResponse
 import com.example.mysubmission2.data.remote.response.UpcomingResponse
 import com.example.mysubmission2.data.remote.retrofit.ApiService
 import com.example.mysubmission2.utils.AppExecutors
@@ -59,6 +60,46 @@ class EventRepository private constructor(
             }
 
             override fun onFailure(call: Call<UpcomingResponse>, t: Throwable) {
+                result.value = Result.Error(t.message.toString())
+            }
+        })
+        val localData = eventDao.getEvents()
+        result.addSource(localData) { eventData: List<EventEntity> ->
+            result.value = Result.Success(eventData)
+        }
+        return result
+    }
+
+    fun getFinished(): LiveData<Result<List<EventEntity>>> {
+        result.value = Result.Loading
+        val client = apiService.getFinished()
+        client.enqueue(object : Callback<FinishedResponse> {
+            override fun onResponse(call: Call<FinishedResponse>, response: Response<FinishedResponse>) {
+                if (response.isSuccessful) {
+                    val listComingItem = response.body()?.listFinishedItem
+                    val eventList = ArrayList<EventEntity>()
+                    appExecutors.diskIO.execute {
+                        listComingItem?.forEach { item ->
+                            val isBookmarked = eventDao.isNewsBookmarked(item.id.toString())
+                            val event = EventEntity(
+                                item.id.toString(),
+                                item.name,
+                                item.summary,
+                                item.description,
+                                item.mediaCover,
+                                item.quota.toString(),
+                                item.beginTime,
+                                isBookmarked
+                            )
+                            eventList.add(event)
+                        }
+                        eventDao.deleteAll()
+                        eventDao.insertEvent(eventList)
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<FinishedResponse>, t: Throwable) {
                 result.value = Result.Error(t.message.toString())
             }
         })

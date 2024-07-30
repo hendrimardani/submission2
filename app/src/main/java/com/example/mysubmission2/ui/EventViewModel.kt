@@ -7,5 +7,6 @@ class EventViewModel(private val eventRepository: EventRepository) : ViewModel()
 
     fun getUpComing() = eventRepository.getUpComing()
 
+    fun getFinished() = eventRepository.getFinished()
 
 }
