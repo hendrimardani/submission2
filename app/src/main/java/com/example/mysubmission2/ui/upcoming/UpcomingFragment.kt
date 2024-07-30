@@ -1,5 +1,6 @@
 package com.example.mysubmission2.ui.upcoming
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,9 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.mysubmission2.databinding.FragmentUpcomingBinding
 import com.example.mysubmission2.ui.EventViewModel
 import com.example.mysubmission2.ui.ViewModelFactory
+import com.example.mysubmission2.data.Result
 
 class UpcomingFragment : Fragment() {
 
@@ -33,9 +37,26 @@ class UpcomingFragment : Fragment() {
             factory
         }
 
-        viewModel.getListEvents().observe(viewLifecycleOwner) { item ->
-            Log.e(TAG, item.toString())
+        viewModel.getListEvents().observe(viewLifecycleOwner) { result ->
+            if (result != null) {
+                when (result) {
+                    is Result.Success -> {
+                        val eventData = result.data
+                        eventData.forEach {
+                            Glide.with(this@UpcomingFragment)
+                                .load(it.mediaCover)
+                                .into(binding.ivUpcoming)
+                            binding.tvTitleUpcoming.text = it.name
+                            Log.e(TAG, it.name.toString())
+                        }
+                    }
+
+                    is Result.Error -> {}
+                    Result.Loading -> {}
+                }
+            }
         }
+
     }
 
     override fun onDestroyView() {
