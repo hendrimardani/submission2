@@ -33,7 +33,9 @@ class UpcomingFragment : Fragment() {
             factory
         }
 
-        Log.e(TAG, viewModel.getListEvents().toString())
+        viewModel.getListEvents().observe(viewLifecycleOwner) { item ->
+            Log.e(TAG, item.toString())
+        }
     }
 
     override fun onDestroyView() {
