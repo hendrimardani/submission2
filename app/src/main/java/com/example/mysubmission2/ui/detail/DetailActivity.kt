@@ -75,14 +75,16 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun getIsBookmarkedClicked(item: EventEntity, viewModel: EventViewModel) {
-        if (item.isBookmarked) {
-            viewModel.deleteEvent(item)
-            binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite_filled))
-            Log.e(TAG, "Terklik")
-        } else {
-            viewModel.saveEvent(item)
-            binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite))
-            Log.e(TAG, "Tidak Terklik")
+        binding.fabDetail.setOnClickListener {
+            if (item.isBookmarked) {
+                viewModel.deleteEvent(item)
+                binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite_filled))
+                Log.e(TAG, "Terklik")
+            } else {
+                viewModel.saveEvent(item)
+                binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite))
+                Log.e(TAG, "Tidak Terklik")
+            }
         }
     }
 
