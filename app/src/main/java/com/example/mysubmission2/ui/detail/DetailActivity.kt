@@ -24,6 +24,8 @@ class DetailActivity : AppCompatActivity() {
     private var _binding: ActivityDetailBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var eventList: ArrayList<EventEntity>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -54,7 +56,9 @@ class DetailActivity : AppCompatActivity() {
                         binding.progressBar.visibility = View.GONE
                         val eventData = result.data
                         eventData.forEach {
-                            getOutputUpComing(it, viewModel)
+                            getOutputUpComing(it)
+
+                            getIsBookmarkedClicked(it, viewModel)
                         }
                     }
                     is Result.Error -> {
@@ -70,28 +74,25 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun getOutputUpComing(item: EventEntity, viewModel: EventViewModel) {
-        var isBookmark = true
+    private fun getIsBookmarkedClicked(item: EventEntity, viewModel: EventViewModel) {
+        if (item.isBookmarked) {
+            viewModel.deleteEvent(item)
+            binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite_filled))
+            Log.e(TAG, "Terklik")
+        } else {
+            viewModel.saveEvent(item)
+            binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite))
+            Log.e(TAG, "Tidak Terklik")
+        }
+    }
+
+    private fun getOutputUpComing(item: EventEntity) {
         Glide.with(this@DetailActivity)
             .load(item.mediaCover)
             .into(binding.ivDetail)
         binding.tvTitleDetail.text = item.name
         binding.tvSummaryDetail.text = item.summary
         binding.tvDescription.text = item.description
-
-        binding.fabDetail.setOnClickListener {
-            if (item.isBookmarked) {
-                viewModel.deleteEvent(item)
-                binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite_filled))
-                Log.e(TAG, "Terklik")
-                isBookmark = false
-            } else {
-                viewModel.saveEvent(item)
-                binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite))
-                Log.e(TAG, "Tidak Terklik")
-                isBookmark = true
-            }
-        }
     }
 
     override fun onDestroy() {
