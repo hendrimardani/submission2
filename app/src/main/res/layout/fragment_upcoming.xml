@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:elevation="5dp"
+    android:elevation="@dimen/cardview_elevation"
+    android:layout_marginVertical="@dimen/activity_vertical_margin"
     android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-    android:layout_marginTop="@dimen/margin_top_bottom"
     tools:context=".ui.upcoming.UpcomingFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout

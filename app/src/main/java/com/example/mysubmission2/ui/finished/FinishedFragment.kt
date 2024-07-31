@@ -1,14 +1,22 @@
 package com.example.mysubmission2.ui.finished
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.mysubmission2.adapter.EventAdapter
+import com.example.mysubmission2.data.Result
+import com.example.mysubmission2.data.local.entity.EventEntity
 import com.example.mysubmission2.databinding.FragmentFinishedBinding
+import com.example.mysubmission2.ui.EventViewModel
+import com.example.mysubmission2.ui.ViewModelFactory
 
+@Suppress("UNREACHABLE_CODE")
 class FinishedFragment : Fragment() {
 
     private var _binding: FragmentFinishedBinding? = null
@@ -19,21 +27,58 @@ class FinishedFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(FinishedViewModel::class.java)
-
         _binding = FragmentFinishedBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        return binding.root
+    }
 
-        val textView: TextView = binding.textDashboard
-        homeViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity())
+        val viewModel: EventViewModel by viewModels { factory }
+
+        val eventAdapter = EventAdapter()
+        getFinished(viewModel, eventAdapter)
+
+        binding.rvList.apply {
+            layoutManager = LinearLayoutManager(context)
+            setHasFixedSize(true)
+            adapter = eventAdapter
         }
-        return root
+    }
+
+    private fun getFinished(viewModel: EventViewModel, eventAdapter: EventAdapter) {
+        viewModel.getFinished().observe(viewLifecycleOwner) { result ->
+            if (result != null) {
+                when (result) {
+                    is Result.Loading -> binding.progressBar.visibility = View.VISIBLE
+                    is Result.Success -> {
+                        binding.progressBar.visibility = View.GONE
+                        val eventData = result.data
+                        eventAdapter.submitList(eventData)
+                        eventData.forEach {
+                            Log.e(TAG, it.name.toString())
+                        }
+                     }
+                    is Result.Error -> {
+                        binding.progressBar.visibility = View.GONE
+                        Toast.makeText(
+                            context,
+                            "Terjadi kesalahan" + result.error,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private const val TAG = "FinishedFragment TEST REST API"
     }
 }

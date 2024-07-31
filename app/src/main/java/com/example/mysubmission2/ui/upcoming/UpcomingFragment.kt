@@ -33,16 +33,16 @@ class UpcomingFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity())
-        val viewModel: EventViewModel by viewModels {
-            factory
-        }
+        val viewModel: EventViewModel by viewModels { factory }
 
+        getUpComing(viewModel)
+    }
+
+    private fun getUpComing(viewModel: EventViewModel) {
         viewModel.getUpComing().observe(viewLifecycleOwner) { result ->
             if (result != null) {
                 when (result) {
-                    is Result.Loading -> {
-                        binding.progressBar.visibility = View.VISIBLE
-                    }
+                    is Result.Loading -> binding.progressBar.visibility = View.VISIBLE
                     is Result.Success -> {
                         binding.progressBar.visibility = View.GONE
                         val eventData = result.data
@@ -73,6 +73,6 @@ class UpcomingFragment : Fragment() {
     }
 
     companion object {
-        const val TAG = "TEST REST API"
+        private const val TAG = "UpComingActivity TEST REST API"
     }
 }

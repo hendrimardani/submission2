@@ -5,4 +5,5 @@
     <dimen name="title_size">16sp</dimen>
     <dimen name="margin_top_bottom">5dp</dimen>
     <dimen name="margin_horizontal">8dp</dimen>
+    <dimen name="cardview_elevation">5dp</dimen>
 </resources>
