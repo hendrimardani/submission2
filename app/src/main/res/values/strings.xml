@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">MySubmission2</string>
+    <string name="title">Title</string>
+    <string name="summary">Summary</string>
     <string name="title_upcoming">Upcoming</string>
     <string name="title_finished">Finished</string>
     <string name="title_favorite">Favorite</string>
-    <string name="title_item_upcoming">Judul Upcoming</string>
 </resources>
