@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("kotlin-parcelize")
     id("com.google.devtools.ksp")
-
+    id ("androidx.navigation.safeargs")
 }
 
 android {
