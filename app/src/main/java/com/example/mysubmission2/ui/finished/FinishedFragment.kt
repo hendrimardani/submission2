@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.mysubmission2.adapter.EventAdapter
 import com.example.mysubmission2.data.Result
 import com.example.mysubmission2.data.local.entity.EventEntity
@@ -41,7 +43,7 @@ class FinishedFragment : Fragment() {
         getFinished(viewModel, eventAdapter)
 
         binding.rvList.apply {
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
             setHasFixedSize(true)
             adapter = eventAdapter
         }
