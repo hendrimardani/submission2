@@ -13,18 +13,22 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.example.mysubmission2.R
+import com.example.mysubmission2.adapter.EventAdapter
+import com.example.mysubmission2.adapter.EventAdapter.Companion.EVENT_ADAPTER
+import com.example.mysubmission2.data.EventRepository
 import com.example.mysubmission2.data.Result
 import com.example.mysubmission2.data.local.entity.EventEntity
+import com.example.mysubmission2.data.remote.response.Detail
 import com.example.mysubmission2.databinding.ActivityDetailBinding
 import com.example.mysubmission2.ui.EventViewModel
 import com.example.mysubmission2.ui.ViewModelFactory
 import com.example.mysubmission2.ui.upcoming.UpcomingFragment
+import com.example.mysubmission2.ui.upcoming.UpcomingFragment.Companion.UPCOMING_FRAGMENT
 
 class DetailActivity : AppCompatActivity() {
     private var _binding: ActivityDetailBinding? = null
     private val binding get() = _binding!!
-
-    private lateinit var eventList: ArrayList<EventEntity>
+    private val detailViewModel by viewModels<EventViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,11 +44,22 @@ class DetailActivity : AppCompatActivity() {
         val factory: ViewModelFactory = ViewModelFactory.getInstance(this)
         val viewModel: EventViewModel by viewModels { factory }
 
-        viewModel.getBookmarkedEvent().observe(this) {
-            binding.progressBar.visibility = View.GONE
-        }
+        val id = intent.getStringExtra(EXTRA_ID).toString()
+        val activity = intent.getStringExtra(EXTRA_ACTIVITY)
 
-        getUpComing(viewModel)
+        if (activity == EVENT_ADAPTER) {
+            Log.e("TEST HASIL NAMA", id)
+            viewModel.getBookmarkedEvent().observe(this) {
+                binding.progressBar.visibility = View.GONE
+            }
+            detailViewModel.getDetail(id)
+            getDetail(detailViewModel, id)
+        } else if (activity == UPCOMING_FRAGMENT) {
+            viewModel.getBookmarkedEvent().observe(this) {
+                binding.progressBar.visibility = View.GONE
+            }
+            getUpComing(viewModel)
+        }
     }
 
     private fun getUpComing(viewModel: EventViewModel) {
@@ -56,7 +71,7 @@ class DetailActivity : AppCompatActivity() {
                         binding.progressBar.visibility = View.GONE
                         val eventData = result.data
                         eventData.forEach {
-                            getOutputUpComing(it)
+                            getOutputUpcomingl(it)
 
                             getIsBookmarkedClicked(it, viewModel)
                         }
@@ -74,6 +89,12 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
+    private fun getDetail(detailViewModel: EventViewModel, id: String) {
+        detailViewModel.detail.observe(this) {
+            getOutputDetail(it)
+        }
+    }
+
     private fun getIsBookmarkedClicked(item: EventEntity, viewModel: EventViewModel) {
         binding.fabDetail.setOnClickListener {
             if (item.isBookmarked) {
@@ -88,7 +109,16 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun getOutputUpComing(item: EventEntity) {
+    private fun getOutputUpcomingl(item: EventEntity) {
+        Glide.with(this@DetailActivity)
+            .load(item.mediaCover)
+            .into(binding.ivDetail)
+        binding.tvTitleDetail.text = item.name
+        binding.tvSummaryDetail.text = item.summary
+        binding.tvDescription.text = item.description
+    }
+
+    private fun getOutputDetail(item: Detail) {
         Glide.with(this@DetailActivity)
             .load(item.mediaCover)
             .into(binding.ivDetail)
@@ -104,6 +134,7 @@ class DetailActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "DETAIL ACTIVITY TEST KLIK"
-        const val EXTRA_NAME = "extra_name"
+        const val EXTRA_ID = "extra_id"
+        const val EXTRA_ACTIVITY = "extra_activity"
     }
 }

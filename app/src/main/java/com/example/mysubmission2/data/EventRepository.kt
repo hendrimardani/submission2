@@ -1,10 +1,15 @@
 package com.example.mysubmission2.data
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.mysubmission2.data.local.entity.EventEntity
 import com.example.mysubmission2.data.local.room.EventDao
+import com.example.mysubmission2.data.remote.response.Detail
+import com.example.mysubmission2.data.remote.response.DetailResponse
 import com.example.mysubmission2.data.remote.response.FinishedResponse
+import com.example.mysubmission2.data.remote.response.SearchResponse
 import com.example.mysubmission2.data.remote.response.UpcomingResponse
 import com.example.mysubmission2.data.remote.retrofit.ApiService
 import com.example.mysubmission2.utils.AppExecutors
@@ -18,6 +23,13 @@ class EventRepository private constructor(
     private val appExecutors: AppExecutors
 ) {
     private val result = MediatorLiveData<Result<List<EventEntity>>>()
+
+//    private val _detail = MutableLiveData<Detail>()
+//    val detail: LiveData<Detail> = _detail
+//
+//    init {
+//        getDetail("123")
+//    }
 
     fun getBookmarkedEvent(): LiveData<List<EventEntity>> {
         return eventDao.getBookmarkedEvent()
@@ -76,10 +88,10 @@ class EventRepository private constructor(
         client.enqueue(object : Callback<FinishedResponse> {
             override fun onResponse(call: Call<FinishedResponse>, response: Response<FinishedResponse>) {
                 if (response.isSuccessful) {
-                    val listComingItem = response.body()?.listFinishedItem
+                    val listFinishedItem = response.body()?.listFinishedItem
                     val eventList = ArrayList<EventEntity>()
                     appExecutors.diskIO.execute {
-                        listComingItem?.forEach { item ->
+                        listFinishedItem?.forEach { item ->
                             val isBookmarked = eventDao.isNewsBookmarked(item.id.toString())
                             val event = EventEntity(
                                 item.id.toString(),
@@ -110,7 +122,26 @@ class EventRepository private constructor(
         return result
     }
 
+//    fun getDetail(id: String) {
+//        result.value = Result.Loading
+//        val client = apiService.getDetail(id)
+//        client.enqueue(object : Callback<DetailResponse> {
+//            override fun onResponse(call: Call<DetailResponse>, response: Response<DetailResponse>) {
+//                if (response.isSuccessful) {
+//                    val detailItem = response.body()?.detail
+//                    _detail.value = response.body()?.detail
+//                    Log.e(TAG, detailItem.toString())
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<DetailResponse>, t: Throwable) {
+//                result.value = Result.Error(t.message.toString())
+//            }
+//        })
+//    }
+
     companion object {
+        const val TAG = "EventRepository Test Hasil"
         @Volatile
         private var instance: EventRepository? = null
         fun getInstance(

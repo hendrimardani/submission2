@@ -15,7 +15,7 @@ import com.example.mysubmission2.databinding.FragmentUpcomingBinding
 import com.example.mysubmission2.ui.EventViewModel
 import com.example.mysubmission2.ui.ViewModelFactory
 import com.example.mysubmission2.data.Result
-import com.example.mysubmission2.ui.detail.DetailActivity.Companion.EXTRA_NAME
+import com.example.mysubmission2.ui.detail.DetailActivity.Companion.EXTRA_ACTIVITY
 
 class UpcomingFragment : Fragment(), View.OnClickListener {
 
@@ -76,7 +76,9 @@ class UpcomingFragment : Fragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.cv_upcoming -> {
-                v.findNavController().navigate(R.id.action_navigation_upcoming_to_detailActivity)
+                val bundle = Bundle()
+                bundle.putString(EXTRA_ACTIVITY, UPCOMING_FRAGMENT)
+                v.findNavController().navigate(R.id.action_navigation_upcoming_to_detailActivity, bundle)
             }
         }
     }
@@ -88,5 +90,6 @@ class UpcomingFragment : Fragment(), View.OnClickListener {
 
     companion object {
         private const val TAG = "UpComingActivity TEST REST API"
+        const val UPCOMING_FRAGMENT = "UpcomingFragment"
     }
 }
