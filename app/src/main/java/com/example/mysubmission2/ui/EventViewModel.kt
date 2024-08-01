@@ -20,10 +20,6 @@ class EventViewModel(private val eventRepository: EventRepository) : ViewModel()
     private val _detail = MutableLiveData<Detail>()
     val detail: LiveData<Detail> = _detail
 
-    init {
-        getDetail("123")
-    }
-
     fun getDetail(id: String) {
         val client = ApiConfig.getApiService().getDetail(id)
         client.enqueue(object : Callback<DetailResponse> {
@@ -31,21 +27,21 @@ class EventViewModel(private val eventRepository: EventRepository) : ViewModel()
                 if (response.isSuccessful) {
                     val detailItem = response.body()?.detail
                     _detail.value = response.body()?.detail
-                    Log.e(EventRepository.TAG, detailItem.toString())
+                    Log.e(TAG, detailItem.toString())
                 }
             }
 
             override fun onFailure(call: Call<DetailResponse>, t: Throwable) {
-                Log.e(EventRepository.TAG, "onFailure : ${t.message}")
+                Log.e(TAG, t.toString())
             }
         })
     }
 
+    fun deleteTable() = eventRepository.deleteTable()
+
     fun getUpComing() = eventRepository.getUpComing()
 
     fun getFinished() = eventRepository.getFinished()
-
-//    fun getDetail(id: String) = eventRepository.detail
 
     fun getBookmarkedEvent() = eventRepository.getBookmarkedEvent()
 
@@ -55,5 +51,9 @@ class EventViewModel(private val eventRepository: EventRepository) : ViewModel()
 
     fun deleteEvent(event: EventEntity) {
         eventRepository.setBookmarkedEvent(event, false)
+    }
+
+    companion object {
+        const val TAG = "EventViewModel Test Data"
     }
 }

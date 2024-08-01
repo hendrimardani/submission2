@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.mysubmission2.data.local.entity.EventEntity
 
-@Database(entities = [EventEntity::class], version = 1, exportSchema = true)
+@Database(entities = [EventEntity::class], version = 1, exportSchema = false)
 abstract class EventDatabase : RoomDatabase() {
     abstract fun eventDao(): EventDao
 

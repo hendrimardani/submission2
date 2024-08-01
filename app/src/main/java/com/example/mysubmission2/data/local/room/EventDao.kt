@@ -10,7 +10,7 @@ import com.example.mysubmission2.data.local.entity.EventEntity
 
 @Dao
 interface EventDao {
-    @Query("SELECT * FROM event ORDER BY id DESC")
+    @Query("SELECT * FROM event ORDER BY id ASC")
     fun getEvents(): LiveData<List<EventEntity>>
 
     @Query("SELECT * FROM event where bookmarked = 1")
@@ -27,4 +27,7 @@ interface EventDao {
 
     @Query("SELECT EXISTS(SELECT * FROM event WHERE id = :id AND bookmarked = 1)")
     fun isNewsBookmarked(id: String): Boolean
+
+    @Query("DELETE FROM event")
+    fun deleteTable()
 }

@@ -24,13 +24,6 @@ class EventRepository private constructor(
 ) {
     private val result = MediatorLiveData<Result<List<EventEntity>>>()
 
-//    private val _detail = MutableLiveData<Detail>()
-//    val detail: LiveData<Detail> = _detail
-//
-//    init {
-//        getDetail("123")
-//    }
-
     fun getBookmarkedEvent(): LiveData<List<EventEntity>> {
         return eventDao.getBookmarkedEvent()
     }
@@ -40,6 +33,10 @@ class EventRepository private constructor(
             event.isBookmarked = bookmarkState
             eventDao.updateEvent(event)
         }
+    }
+
+    fun deleteTable() {
+        return eventDao.deleteTable()
     }
 
     fun getUpComing(): LiveData<Result<List<EventEntity>>> {
@@ -122,26 +119,7 @@ class EventRepository private constructor(
         return result
     }
 
-//    fun getDetail(id: String) {
-//        result.value = Result.Loading
-//        val client = apiService.getDetail(id)
-//        client.enqueue(object : Callback<DetailResponse> {
-//            override fun onResponse(call: Call<DetailResponse>, response: Response<DetailResponse>) {
-//                if (response.isSuccessful) {
-//                    val detailItem = response.body()?.detail
-//                    _detail.value = response.body()?.detail
-//                    Log.e(TAG, detailItem.toString())
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<DetailResponse>, t: Throwable) {
-//                result.value = Result.Error(t.message.toString())
-//            }
-//        })
-//    }
-
     companion object {
-        const val TAG = "EventRepository Test Hasil"
         @Volatile
         private var instance: EventRepository? = null
         fun getInstance(

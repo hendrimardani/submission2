@@ -52,44 +52,44 @@ class DetailActivity : AppCompatActivity() {
             viewModel.getBookmarkedEvent().observe(this) {
                 binding.progressBar.visibility = View.GONE
             }
-            detailViewModel.getDetail(id)
             getDetail(detailViewModel, id)
         } else if (activity == UPCOMING_FRAGMENT) {
-            viewModel.getBookmarkedEvent().observe(this) {
-                binding.progressBar.visibility = View.GONE
-            }
-            getUpComing(viewModel)
+//            viewModel.getBookmarkedEvent().observe(this) {
+//                binding.progressBar.visibility = View.GONE
+//            }
+//            getUpComing(viewModel)
         }
     }
 
-    private fun getUpComing(viewModel: EventViewModel) {
-        viewModel.getUpComing().observe(this) { result ->
-            if (result != null) {
-                when (result) {
-                    is Result.Loading -> binding.progressBar.visibility = View.VISIBLE
-                    is Result.Success -> {
-                        binding.progressBar.visibility = View.GONE
-                        val eventData = result.data
-                        eventData.forEach {
-                            getOutputUpcomingl(it)
+//    private fun getUpComing(viewModel: EventViewModel) {
+//        viewModel.getUpComing().observe(this) { result ->
+//            if (result != null) {
+//                when (result) {
+//                    is Result.Loading -> binding.progressBar.visibility = View.VISIBLE
+//                    is Result.Success -> {
+//                        binding.progressBar.visibility = View.GONE
+//                        val eventData = result.data
+//                        eventData.forEach {
+//                            getOutputUpcomingl(it)
+//                            getIsBookmarkedClicked(it, viewModel)
+//                        }
+//                    }
+//                    is Result.Error -> {
+//                        binding.progressBar.visibility = View.GONE
+//                        Toast.makeText(
+//                            this,
+//                            "Terjadi kesalahan" + result.error,
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+//                    }
+//                }
+//            }
+//        }
+//    }
 
-                            getIsBookmarkedClicked(it, viewModel)
-                        }
-                    }
-                    is Result.Error -> {
-                        binding.progressBar.visibility = View.GONE
-                        Toast.makeText(
-                            this,
-                            "Terjadi kesalahan" + result.error,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-            }
-        }
-    }
 
     private fun getDetail(detailViewModel: EventViewModel, id: String) {
+        detailViewModel.getDetail(id)
         detailViewModel.detail.observe(this) {
             getOutputDetail(it)
         }
@@ -133,7 +133,7 @@ class DetailActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val TAG = "DETAIL ACTIVITY TEST KLIK"
+        private const val TAG = "DetailActivity TEST KLIK"
         const val EXTRA_ID = "extra_id"
         const val EXTRA_ACTIVITY = "extra_activity"
     }

@@ -15,13 +15,15 @@ import com.example.mysubmission2.databinding.FragmentUpcomingBinding
 import com.example.mysubmission2.ui.EventViewModel
 import com.example.mysubmission2.ui.ViewModelFactory
 import com.example.mysubmission2.data.Result
+import com.example.mysubmission2.data.local.entity.EventEntity
+import com.example.mysubmission2.data.local.room.EventDao
 import com.example.mysubmission2.ui.detail.DetailActivity.Companion.EXTRA_ACTIVITY
 
 class UpcomingFragment : Fragment(), View.OnClickListener {
 
     private var _binding: FragmentUpcomingBinding? = null
     private val binding get() = _binding!!
-    private var title: String? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,6 +43,8 @@ class UpcomingFragment : Fragment(), View.OnClickListener {
         getUpComing(viewModel)
 
         binding.cvUpcoming.setOnClickListener(this)
+
+//        viewModel.deleteTable()
     }
 
     private fun getUpComing(viewModel: EventViewModel) {
@@ -52,11 +56,7 @@ class UpcomingFragment : Fragment(), View.OnClickListener {
                         binding.progressBar.visibility = View.GONE
                         val eventData = result.data
                         eventData.forEach {
-                            Glide.with(this@UpcomingFragment)
-                                .load(it.mediaCover)
-                                .into(binding.ivUpcoming)
-                            binding.tvTitleUpcoming.text = it.name
-                            title = it.name.toString()
+                            getOutputUpcoming(it)
                             Log.e(TAG, it.name.toString())
                         }
                     }
@@ -71,6 +71,13 @@ class UpcomingFragment : Fragment(), View.OnClickListener {
                 }
             }
         }
+    }
+
+    private fun getOutputUpcoming(item: EventEntity) {
+        Glide.with(this@UpcomingFragment)
+            .load(item.mediaCover)
+            .into(binding.ivUpcoming)
+        binding.tvTitleUpcoming.text = item.name
     }
 
     override fun onClick(v: View?) {
