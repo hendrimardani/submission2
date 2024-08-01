@@ -18,11 +18,14 @@ import com.example.mysubmission2.data.Result
 import com.example.mysubmission2.data.local.entity.EventEntity
 import com.example.mysubmission2.data.local.room.EventDao
 import com.example.mysubmission2.ui.detail.DetailActivity.Companion.EXTRA_ACTIVITY
+import com.example.mysubmission2.ui.detail.DetailActivity.Companion.EXTRA_ID
 
 class UpcomingFragment : Fragment(), View.OnClickListener {
 
     private var _binding: FragmentUpcomingBinding? = null
     private val binding get() = _binding!!
+
+    var id: String? = null
 
 
     override fun onCreateView(
@@ -78,6 +81,7 @@ class UpcomingFragment : Fragment(), View.OnClickListener {
             .load(item.mediaCover)
             .into(binding.ivUpcoming)
         binding.tvTitleUpcoming.text = item.name
+        id = item.id
     }
 
     override fun onClick(v: View?) {
@@ -85,6 +89,7 @@ class UpcomingFragment : Fragment(), View.OnClickListener {
             R.id.cv_upcoming -> {
                 val bundle = Bundle()
                 bundle.putString(EXTRA_ACTIVITY, UPCOMING_FRAGMENT)
+                bundle.putString(EXTRA_ID, id)
                 v.findNavController().navigate(R.id.action_navigation_upcoming_to_detailActivity, bundle)
             }
         }

@@ -15,6 +15,7 @@ import com.example.mysubmission2.ui.detail.DetailActivity
 import com.example.mysubmission2.ui.detail.DetailActivity.Companion.EXTRA_ACTIVITY
 import com.example.mysubmission2.ui.detail.DetailActivity.Companion.EXTRA_ID
 
+
 class EventAdapter: ListAdapter<EventEntity, MyViewHolder>(DIFF_CALLBACK){
 
     class MyViewHolder(val binding: ItemListBinding) : RecyclerView.ViewHolder(binding.root) {
