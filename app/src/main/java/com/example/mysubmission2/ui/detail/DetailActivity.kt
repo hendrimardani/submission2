@@ -56,12 +56,11 @@ class DetailActivity : AppCompatActivity() {
             viewModel.getBookmarkedEvent().observe(this) {
                 binding.progressBar.visibility = View.GONE
             }
-            getUpComing(viewModel, id)
+            getUpComing(viewModel)
         }
     }
 
-    private fun getUpComing(viewModel: EventViewModel, id: String) {
-        getDetail(viewModel, id)
+    private fun getUpComing(viewModel: EventViewModel) {
         viewModel.getUpComing().observe(this) { result ->
             if (result != null) {
                 when (result) {
@@ -70,7 +69,8 @@ class DetailActivity : AppCompatActivity() {
                         binding.progressBar.visibility = View.GONE
                         val eventData = result.data
                         eventData.forEach {
-                            getOutputUpcomingl(it)
+//                            getOutputUpcoming(it)
+
                             getIsBookmarkClikedUpComing(it, viewModel)
                         }
                     }
@@ -88,7 +88,10 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun getFinished(viewModel: EventViewModel, id: String) {
-        getDetail(viewModel, id)
+        viewModel.getDetail(id)
+        viewModel.detail.observe(this) {
+            getOutputFinished(it)
+        }
         viewModel.getFinished().observe(this) { result ->
             if (result != null) {
                 when (result) {
@@ -97,7 +100,7 @@ class DetailActivity : AppCompatActivity() {
                         binding.progressBar.visibility = View.GONE
                         val eventData = result.data
                         eventData.forEach {
-                            getIsBookmarkClikedFinished(it, viewModel)
+                            getIsBookmarkClikedFinished(it, viewModel, id)
                         }
                     }
                     is Result.Error -> {
@@ -113,54 +116,43 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-
-    private fun getDetail(viewModel: EventViewModel, id: String) {
-        viewModel.getDetail(id)
-        viewModel.detail.observe(this) {
-            getOutputFinished(it)
-        }
-    }
-
     private fun getIsBookmarkClikedUpComing(item: EventEntity, viewModel: EventViewModel) {
         binding.fabDetail.setOnClickListener {
             if (item.isBookmarked) {
                 viewModel.deleteEvent(item)
                 binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite_filled))
-                Log.e(TAG, "Terklik")
-                Log.e("ID NA EUY EUY", item.id)
+                Log.e(TAG_UPCOMING, "Terklik ${item.id}")
             } else {
                 viewModel.saveEvent(item)
                 binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite))
-                Log.e(TAG, "Tidak Terklik")
-                Log.e("ID NA EUY EUY", item.id)
             }
         }
     }
 
-    private fun getIsBookmarkClikedFinished(item: EventEntity, viewModel: EventViewModel) {
+    private fun getIsBookmarkClikedFinished(item: EventEntity, viewModel: EventViewModel, id: String) {
         binding.fabDetail.setOnClickListener {
-            if (item.isBookmarked) {
-                viewModel.deleteEvent(item)
-                binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite_filled))
-                Log.e(TAG, "Terklik")
-                Log.e("ID NA EUY EUY", item.id)
-            } else {
-                viewModel.saveEvent(item)
-                binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite))
-                Log.e(TAG, "Tidak Terklik")
-                Log.e("ID NA EUY EUY", item.id)
+            viewModel.getDetail(id)
+            viewModel.detail.observe(this) {
+                if (item.isBookmarked) {
+                    viewModel.deleteEvent(item)
+                    binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite_filled))
+                    Log.e(TAG_FINISHED, "Terklik ${it.id}")
+                } else {
+                    viewModel.saveEvent(item)
+                    binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite))
+                }
             }
         }
     }
 
-    private fun getOutputUpcomingl(item: EventEntity) {
-        Glide.with(this@DetailActivity)
-            .load(item.mediaCover)
-            .into(binding.ivDetail)
-        binding.tvTitleDetail.text = item.name
-        binding.tvSummaryDetail.text = item.summary
-        binding.tvDescription.text = item.description
-    }
+//    private fun getOutputUpcoming(item: EventEntity) {
+//        Glide.with(this@DetailActivity)
+//            .load(item.mediaCover)
+//            .into(binding.ivDetail)
+//        binding.tvTitleDetail.text = item.name
+//        binding.tvSummaryDetail.text = item.summary
+//        binding.tvDescription.text = item.description
+//    }
 
     private fun getOutputFinished(item: Detail) {
         Glide.with(this@DetailActivity)
@@ -177,7 +169,8 @@ class DetailActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val TAG = "DetailActivity TEST KLIK"
+        private const val TAG_UPCOMING = "DetailActivity UPCOMING TEST KLIK"
+        private const val TAG_FINISHED = "DetailActivity FINISHED TEST KLIK"
 
         const val EXTRA_ID = "extra_id"
         const val EXTRA_ACTIVITY = "extra_activity"

@@ -37,7 +37,7 @@ class EventViewModel(private val eventRepository: EventRepository) : ViewModel()
         })
     }
 
-    fun deleteTable() = eventRepository.deleteTable()
+//    fun deleteTable() = eventRepository.deleteTable()
 
     fun getUpComing() = eventRepository.getUpComing()
 

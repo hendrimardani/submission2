@@ -35,9 +35,9 @@ class EventRepository private constructor(
         }
     }
 
-    fun deleteTable() {
-        return eventDao.deleteTable()
-    }
+//    fun deleteTable() {
+//        return eventDao.deleteTable()
+//    }
 
     fun getUpComing(): LiveData<Result<List<EventEntity>>> {
         result.value = Result.Loading
