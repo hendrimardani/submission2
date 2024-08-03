@@ -28,6 +28,7 @@ import com.example.mysubmission2.ui.upcoming.UpcomingFragment.Companion.UPCOMING
 class DetailActivity : AppCompatActivity() {
     private var _binding: ActivityDetailBinding? = null
     private val binding get() = _binding!!
+    var isBookmark = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,7 +70,7 @@ class DetailActivity : AppCompatActivity() {
                         binding.progressBar.visibility = View.GONE
                         val eventData = result.data
                         eventData.forEach {
-//                            getOutputUpcoming(it)
+                            getOutputUpcoming(it)
 
                             getIsBookmarkClikedUpComing(it, viewModel)
                         }
@@ -131,28 +132,32 @@ class DetailActivity : AppCompatActivity() {
 
     private fun getIsBookmarkClikedFinished(item: EventEntity, viewModel: EventViewModel, id: String) {
         binding.fabDetail.setOnClickListener {
-            viewModel.getDetail(id)
-            viewModel.detail.observe(this) {
-                if (item.isBookmarked) {
-                    viewModel.deleteEvent(item)
+            if (!isBookmark) {
+                viewModel.getDetail(id)
+                viewModel.detail.observe(this) {
                     binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite_filled))
+                    Toast.makeText(this, "Terklik", Toast.LENGTH_SHORT).show()
                     Log.e(TAG_FINISHED, "Terklik ${it.id}")
-                } else {
-                    viewModel.saveEvent(item)
-                    binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite))
+                viewModel.deleteEvent(item)
+                }
+                isBookmark = true
+            } else {
+                binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite))
+                Toast.makeText(this, "Tidak Terklik", Toast.LENGTH_SHORT).show()
+                isBookmark = false
+                viewModel.saveEvent(item)
                 }
             }
         }
-    }
 
-//    private fun getOutputUpcoming(item: EventEntity) {
-//        Glide.with(this@DetailActivity)
-//            .load(item.mediaCover)
-//            .into(binding.ivDetail)
-//        binding.tvTitleDetail.text = item.name
-//        binding.tvSummaryDetail.text = item.summary
-//        binding.tvDescription.text = item.description
-//    }
+    private fun getOutputUpcoming(item: EventEntity) {
+        Glide.with(this@DetailActivity)
+            .load(item.mediaCover)
+            .into(binding.ivDetail)
+        binding.tvTitleDetail.text = item.name
+        binding.tvSummaryDetail.text = item.summary
+        binding.tvDescription.text = item.description
+    }
 
     private fun getOutputFinished(item: Detail) {
         Glide.with(this@DetailActivity)
