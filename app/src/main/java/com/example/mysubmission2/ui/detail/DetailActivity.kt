@@ -61,11 +61,11 @@ class DetailActivity : AppCompatActivity() {
             viewModel.getBookmarkedEvent().observe(this) {
                 binding.progressBar.visibility = View.GONE
             }
-            getUpComing(viewModel)
+            getUpComing(viewModel, id)
         }
     }
 
-    private fun getUpComing(viewModel: EventViewModel) {
+    private fun getUpComing(viewModel: EventViewModel, id: String) {
         viewModel.getUpComing().observe(this) { result ->
             if (result != null) {
                 when (result) {
@@ -76,7 +76,7 @@ class DetailActivity : AppCompatActivity() {
                         eventData.forEach {
                             getOutputUpcoming(it)
 
-                            getIsBookmarkClikedUpComing(it, viewModel)
+                            getIsBookmarkClikedUpComing(it, viewModel, id)
                         }
                     }
                     is Result.Error -> {
@@ -93,10 +93,6 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun getFinished(viewModel: EventViewModel, id: String) {
-//        viewModel.getDetail(id)
-//        viewModel.detail.observe(this) {
-//            getOutputFinished(it)
-//        }
         viewModel.getFinished().observe(this) { result ->
             if (result != null) {
                 when (result) {
@@ -105,7 +101,7 @@ class DetailActivity : AppCompatActivity() {
                         binding.progressBar.visibility = View.GONE
                         val eventData = result.data
                         eventData.forEach {
-                            getIsBookmarkClikedFinished(it, viewModel, id)
+                            getIsBookmarkClikedFinished(viewModel, id)
                         }
                     }
                     is Result.Error -> {
@@ -121,26 +117,30 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun getIsBookmarkClikedUpComing(item: EventEntity, viewModel: EventViewModel) {
+    private fun getIsBookmarkClikedUpComing(item: EventEntity, viewModel: EventViewModel, id: String) {
         binding.fabDetail.setOnClickListener {
-            if (item.isBookmarked) {
-                viewModel.deleteEvent(item)
+            if (!isBookmark) {
+                viewModel.updateBookmarkEvent(id, true)
                 binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite_filled))
+                isBookmark = true
             } else {
-                viewModel.saveEvent(item)
+                viewModel.updateBookmarkEvent(id, false)
                 binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite))
+                isBookmark = false
             }
         }
     }
 
-    private fun getIsBookmarkClikedFinished(item: EventEntity, viewModel: EventViewModel, id: String) {
+    private fun getIsBookmarkClikedFinished(viewModel: EventViewModel, id: String) {
         binding.fabDetail.setOnClickListener {
-            if (item.isBookmarked) {
-                viewModel.deleteEvent(item)
+            if (!isBookmark) {
+                viewModel.updateBookmarkEvent(id, true)
                 binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite_filled))
+                isBookmark = true
             } else {
-                viewModel.saveEvent(item)
+                viewModel.updateBookmarkEvent(id, false)
                 binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite))
+                isBookmark = false
             }
         }
     }

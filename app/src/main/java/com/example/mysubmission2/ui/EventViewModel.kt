@@ -37,21 +37,21 @@ class EventViewModel(private val eventRepository: EventRepository) : ViewModel()
         })
     }
 
-    fun deleteTable() = eventRepository.deleteTable()
-
     fun getUpComing() = eventRepository.getUpComing()
 
     fun getFinished() = eventRepository.getFinished()
 
     fun getBookmarkedEvent() = eventRepository.getBookmarkedEvent()
 
-    fun saveEvent(event: EventEntity) {
-        eventRepository.setBookmarkedEvent(event, true)
-    }
+    fun updateBookmarkEvent(id: String, bookmarkState: Boolean) = eventRepository.updateBookmarkEvent(id, bookmarkState)
 
-    fun deleteEvent(event: EventEntity) {
-        eventRepository.setBookmarkedEvent(event, false)
-    }
+//    fun saveEvent(event: EventEntity) {
+//        eventRepository.setBookmarkedEvent(event, true)
+//    }
+//
+//    fun deleteEvent(event: EventEntity) {
+//        eventRepository.setBookmarkedEvent(event, false)
+//    }
 
     companion object {
         const val TAG = "EventViewModel Test Data"

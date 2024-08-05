@@ -61,8 +61,8 @@ class UpcomingFragment : Fragment(), View.OnClickListener {
                             getOutputUpcoming(it)
                             Log.e(TAG, it.name as String)
                         }
-                        Log.e(TAG, "total ada ${eventData.size} item")
                     }
+
                     is Result.Error -> {
                         binding.progressBar.visibility = View.GONE
                         Toast.makeText(

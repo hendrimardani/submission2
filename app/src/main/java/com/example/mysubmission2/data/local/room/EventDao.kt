@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.example.mysubmission2.data.local.entity.EventEntity
+import com.example.mysubmission2.data.remote.response.Detail
 
 @Dao
 interface EventDao {
@@ -20,17 +21,20 @@ interface EventDao {
     fun getBookmarkedEvent(): LiveData<List<EventEntity>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertEvent(event: List<EventEntity>)
+    fun insertUpcoming(event: List<EventEntity>)
 
-    @Update
-    fun updateEvent(event: EventEntity)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertFinished(event: List<EventEntity>)
+
+//    @Update
+//    fun updateEvent(event: EventEntity)
+
+    @Query("UPDATE event SET bookmarked = :newBookmarked WHERE id = :id")
+    fun updateBookmarkEvent(id: String, newBookmarked: Boolean)
 
     @Query("DELETE FROM event WHERE bookmarked = 0")
     fun deleteAll()
 
     @Query("SELECT EXISTS(SELECT * FROM event WHERE id = :id AND bookmarked = 1)")
-    fun isNewsBookmarked(id: String): Boolean
-
-    @Query("DELETE FROM event")
-    fun deleteTable()
+    fun isEventBookmarked(id: String): Boolean
 }

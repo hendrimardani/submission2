@@ -29,16 +29,20 @@ class EventRepository private constructor(
         return eventDao.getBookmarkedEvent()
     }
 
-    fun setBookmarkedEvent(event: EventEntity, bookmarkState: Boolean) {
+//    fun setBookmarkedEvent(event: EventEntity, bookmarkState: Boolean) {
+//        appExecutors.diskIO.execute {
+//            event.isBookmarked = bookmarkState
+//            eventDao.updateEvent(event)
+//        }
+//    }
+
+    fun updateBookmarkEvent(id: String, bookmarkState: Boolean) {
         appExecutors.diskIO.execute {
-            event.isBookmarked = bookmarkState
-            eventDao.updateEvent(event)
+            eventDao.updateBookmarkEvent(id, bookmarkState)
         }
     }
 
-    fun deleteTable() {
-        return eventDao.deleteTable()
-    }
+
 
     fun getUpComing(): LiveData<Result<List<EventEntity>>> {
         result.value = Result.Loading
@@ -50,7 +54,7 @@ class EventRepository private constructor(
                     val eventList = ArrayList<EventEntity>()
                     appExecutors.diskIO.execute {
                         listComingItem?.forEach { item ->
-                            val isBookmarked = eventDao.isNewsBookmarked(item.id.toString())
+                            val isBookmarked = eventDao.isEventBookmarked(item.id.toString())
                             val event = EventEntity(
                                 item.id.toString(),
                                 item.name,
@@ -64,8 +68,7 @@ class EventRepository private constructor(
                             eventList.add(event)
                         }
                         eventDao.deleteAll()
-                        eventDao.insertEvent(eventList)
-                        Log.e("TEST TEST CUY CUY", eventList.size.toString())
+                        eventDao.insertUpcoming(eventList)
                     }
                 }
             }
@@ -77,6 +80,7 @@ class EventRepository private constructor(
         val localData = eventDao.getEventUpComing()
         result.addSource(localData) { eventData: List<EventEntity> ->
             result.value = Result.Success(eventData)
+            Log.e("TEST TEST CUY CUY", eventData.size.toString())
         }
 
         return result
@@ -92,7 +96,7 @@ class EventRepository private constructor(
                     val eventList = ArrayList<EventEntity>()
                     appExecutors.diskIO.execute {
                         listFinishedItem?.forEach { item ->
-                            val isBookmarked = eventDao.isNewsBookmarked(item.id.toString())
+                            val isBookmarked = eventDao.isEventBookmarked(item.id.toString())
                             val event = EventEntity(
                                 item.id.toString(),
                                 item.name,
@@ -106,7 +110,7 @@ class EventRepository private constructor(
                             eventList.add(event)
                         }
                         eventDao.deleteAll()
-                        eventDao.insertEvent(eventList)
+                        eventDao.insertFinished(eventList)
                     }
                 }
             }
