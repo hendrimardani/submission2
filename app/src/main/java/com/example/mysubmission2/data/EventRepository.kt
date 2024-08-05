@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asFlow
 import com.example.mysubmission2.data.local.entity.EventEntity
 import com.example.mysubmission2.data.local.room.EventDao
 import com.example.mysubmission2.data.remote.response.Detail
@@ -35,9 +36,9 @@ class EventRepository private constructor(
         }
     }
 
-//    fun deleteTable() {
-//        return eventDao.deleteTable()
-//    }
+    fun deleteTable() {
+        return eventDao.deleteTable()
+    }
 
     fun getUpComing(): LiveData<Result<List<EventEntity>>> {
         result.value = Result.Loading
@@ -64,6 +65,7 @@ class EventRepository private constructor(
                         }
                         eventDao.deleteAll()
                         eventDao.insertEvent(eventList)
+                        Log.e("TEST TEST CUY CUY", eventList.size.toString())
                     }
                 }
             }
@@ -72,10 +74,11 @@ class EventRepository private constructor(
                 result.value = Result.Error(t.message.toString())
             }
         })
-        val localData = eventDao.getEvents()
+        val localData = eventDao.getEventUpComing()
         result.addSource(localData) { eventData: List<EventEntity> ->
             result.value = Result.Success(eventData)
         }
+
         return result
     }
 
@@ -112,7 +115,7 @@ class EventRepository private constructor(
                 result.value = Result.Error(t.message.toString())
             }
         })
-        val localData = eventDao.getEvents()
+        val localData = eventDao.getEventFinished()
         result.addSource(localData) { eventData: List<EventEntity> ->
             result.value = Result.Success(eventData)
         }

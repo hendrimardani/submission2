@@ -11,7 +11,10 @@ import com.example.mysubmission2.data.local.entity.EventEntity
 @Dao
 interface EventDao {
     @Query("SELECT * FROM event ORDER BY id ASC")
-    fun getEvents(): LiveData<List<EventEntity>>
+    fun getEventUpComing(): LiveData<List<EventEntity>>
+
+    @Query("SELECT * FROM event ORDER BY id ASC")
+    fun getEventFinished(): LiveData<List<EventEntity>>
 
     @Query("SELECT * FROM event where bookmarked = 1")
     fun getBookmarkedEvent(): LiveData<List<EventEntity>>

@@ -53,6 +53,10 @@ class DetailActivity : AppCompatActivity() {
                 binding.progressBar.visibility = View.GONE
             }
             getFinished(viewModel, id)
+            viewModel.getDetail(id)
+            viewModel.detail.observe(this) {
+                getOutputFinished(it)
+            }
         } else if (activity == UPCOMING_FRAGMENT) {
             viewModel.getBookmarkedEvent().observe(this) {
                 binding.progressBar.visibility = View.GONE
@@ -89,10 +93,10 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun getFinished(viewModel: EventViewModel, id: String) {
-        viewModel.getDetail(id)
-        viewModel.detail.observe(this) {
-            getOutputFinished(it)
-        }
+//        viewModel.getDetail(id)
+//        viewModel.detail.observe(this) {
+//            getOutputFinished(it)
+//        }
         viewModel.getFinished().observe(this) { result ->
             if (result != null) {
                 when (result) {
@@ -122,7 +126,6 @@ class DetailActivity : AppCompatActivity() {
             if (item.isBookmarked) {
                 viewModel.deleteEvent(item)
                 binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite_filled))
-                Log.e(TAG_UPCOMING, "Terklik ${item.id}")
             } else {
                 viewModel.saveEvent(item)
                 binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite))
@@ -132,23 +135,15 @@ class DetailActivity : AppCompatActivity() {
 
     private fun getIsBookmarkClikedFinished(item: EventEntity, viewModel: EventViewModel, id: String) {
         binding.fabDetail.setOnClickListener {
-            if (!isBookmark) {
-                viewModel.getDetail(id)
-                viewModel.detail.observe(this) {
-                    binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite_filled))
-                    Toast.makeText(this, "Terklik", Toast.LENGTH_SHORT).show()
-                    Log.e(TAG_FINISHED, "Terklik ${it.id}")
+            if (item.isBookmarked) {
                 viewModel.deleteEvent(item)
-                }
-                isBookmark = true
+                binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite_filled))
             } else {
-                binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite))
-                Toast.makeText(this, "Tidak Terklik", Toast.LENGTH_SHORT).show()
-                isBookmark = false
                 viewModel.saveEvent(item)
-                }
+                binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite))
             }
         }
+    }
 
     private fun getOutputUpcoming(item: EventEntity) {
         Glide.with(this@DetailActivity)

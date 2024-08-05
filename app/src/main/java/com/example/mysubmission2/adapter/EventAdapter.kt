@@ -19,15 +19,15 @@ import com.example.mysubmission2.ui.detail.DetailActivity.Companion.EXTRA_ID
 class EventAdapter: ListAdapter<EventEntity, MyViewHolder>(DIFF_CALLBACK){
 
     class MyViewHolder(val binding: ItemListBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(event: EventEntity) {
-            binding.tvTitleFinished.text = event.name
+        fun bind(item: EventEntity) {
+            binding.tvTitleFinished.text = item.name
             Glide.with(itemView.context)
-                .load(event.mediaCover)
+                .load(item.mediaCover)
                 .into(binding.ivFinished)
             itemView.setOnClickListener {
                 val intent = Intent(itemView.context, DetailActivity::class.java)
-                intent.putExtra(EXTRA_ID, event.id)
                 intent.putExtra(EXTRA_ACTIVITY, EVENT_ADAPTER)
+                intent.putExtra(EXTRA_ID, item.id)
                 itemView.context.startActivity(intent)
             }
         }

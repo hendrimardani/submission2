@@ -16,7 +16,6 @@ import com.example.mysubmission2.ui.EventViewModel
 import com.example.mysubmission2.ui.ViewModelFactory
 import com.example.mysubmission2.data.Result
 import com.example.mysubmission2.data.local.entity.EventEntity
-import com.example.mysubmission2.data.local.room.EventDao
 import com.example.mysubmission2.ui.detail.DetailActivity.Companion.EXTRA_ACTIVITY
 import com.example.mysubmission2.ui.detail.DetailActivity.Companion.EXTRA_ID
 
@@ -60,8 +59,9 @@ class UpcomingFragment : Fragment(), View.OnClickListener {
                         val eventData = result.data
                         eventData.forEach {
                             getOutputUpcoming(it)
-                            Log.e(TAG, it.name.toString())
+                            Log.e(TAG, it.name as String)
                         }
+                        Log.e(TAG, "total ada ${eventData.size} item")
                     }
                     is Result.Error -> {
                         binding.progressBar.visibility = View.GONE
@@ -101,7 +101,7 @@ class UpcomingFragment : Fragment(), View.OnClickListener {
     }
 
     companion object {
-        private const val TAG = "UpComingActivity TEST REST API"
+        private const val TAG = "UpComingFragment TEST REST API"
         const val UPCOMING_FRAGMENT = "UpcomingFragment"
     }
 }
