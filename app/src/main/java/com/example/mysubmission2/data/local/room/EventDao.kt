@@ -5,9 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
 import com.example.mysubmission2.data.local.entity.EventEntity
-import com.example.mysubmission2.data.remote.response.Detail
 
 @Dao
 interface EventDao {

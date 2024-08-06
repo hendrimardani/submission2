@@ -41,8 +41,6 @@ class EventViewModel(private val eventRepository: EventRepository) : ViewModel()
 
     fun getFinished() = eventRepository.getFinished()
 
-    fun getBookmarkedEvent() = eventRepository.getBookmarkedEvent()
-
     fun updateBookmarkEvent(id: String, bookmarkState: Boolean) = eventRepository.updateBookmarkEvent(id, bookmarkState)
 
 //    fun saveEvent(event: EventEntity) {

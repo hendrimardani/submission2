@@ -42,6 +42,9 @@ class EventRepository private constructor(
         }
     }
 
+    fun getEventFinished(): LiveData<List<EventEntity>> {
+        return eventDao.getEventFinished()
+    }
 
 
     fun getUpComing(): LiveData<Result<List<EventEntity>>> {
@@ -80,7 +83,6 @@ class EventRepository private constructor(
         val localData = eventDao.getEventUpComing()
         result.addSource(localData) { eventData: List<EventEntity> ->
             result.value = Result.Success(eventData)
-            Log.e("TEST TEST CUY CUY", eventData.size.toString())
         }
 
         return result
