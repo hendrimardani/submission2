@@ -40,9 +40,9 @@ class EventRepository private constructor(
         return eventDao.getFinishedById(id)
     }
 
-    fun updateBookmarkEvent(id: String, bookmarkState: Boolean) {
+    fun updateFavoriteEvent(id: String, favoriteState: Boolean) {
         appExecutors.diskIO.execute {
-            eventDao.updateBookmarkEvent(id, bookmarkState)
+            eventDao.updateFavoriteEvent(id, favoriteState)
         }
     }
 
@@ -56,7 +56,7 @@ class EventRepository private constructor(
                     val eventList = ArrayList<EventEntity>()
                     appExecutors.diskIO.execute {
                         listComingItem?.forEach { item ->
-                            val isBookmarked = eventDao.isEventBookmarked(item.id.toString())
+                            val isBookmarked = eventDao.isEventFavorite(item.id.toString())
                             val event = EventEntity(
                                 item.id.toString(),
                                 item.name,
@@ -97,7 +97,7 @@ class EventRepository private constructor(
                     val eventList = ArrayList<EventEntity>()
                     appExecutors.diskIO.execute {
                         listFinishedItem?.forEach { item ->
-                            val isBookmarked = eventDao.isEventBookmarked(item.id.toString())
+                            val isBookmarked = eventDao.isEventFavorite(item.id.toString())
                             val event = EventEntity(
                                 item.id.toString(),
                                 item.name,

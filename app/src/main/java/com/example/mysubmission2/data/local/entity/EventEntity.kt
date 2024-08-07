@@ -29,6 +29,6 @@ class EventEntity(
     @field:ColumnInfo(name = "beginTime")
     val beginTime: String? = null,
 
-    @field:ColumnInfo(name = "bookmarked")
-    var isBookmarked: Boolean
+    @field:ColumnInfo(name = "favorite")
+    var isFavorite: Boolean
 )

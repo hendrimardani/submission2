@@ -15,7 +15,7 @@ interface EventDao {
     @Query("SELECT * FROM event ORDER BY id ASC")
     fun getEventFinished(): LiveData<List<EventEntity>>
 
-    @Query("SELECT * FROM event where bookmarked = 1")
+    @Query("SELECT * FROM event where favorite = 1")
     fun getBookmarkedEvent(): LiveData<List<EventEntity>>
 
     @Query("SELECT * FROM event where id = :id")
@@ -30,12 +30,12 @@ interface EventDao {
 //    @Update
 //    fun updateEvent(event: EventEntity)
 
-    @Query("UPDATE event SET bookmarked = :newBookmarked WHERE id = :id")
-    fun updateBookmarkEvent(id: String, newBookmarked: Boolean)
+    @Query("UPDATE event SET favorite = :newFavorite WHERE id = :id")
+    fun updateFavoriteEvent(id: String, newFavorite: Boolean)
 
-    @Query("DELETE FROM event WHERE bookmarked = 0")
+    @Query("DELETE FROM event WHERE favorite = 0")
     fun deleteAll()
 
-    @Query("SELECT EXISTS(SELECT * FROM event WHERE id = :id AND bookmarked = 1)")
-    fun isEventBookmarked(id: String): Boolean
+    @Query("SELECT EXISTS(SELECT * FROM event WHERE id = :id AND favorite = 1)")
+    fun isEventFavorite(id: String): Boolean
 }

@@ -17,8 +17,25 @@ abstract class EventDatabase : RoomDatabase() {
             instance ?: synchronized(this) {
                 instance ?: Room.databaseBuilder(
                     context.applicationContext,
-                    EventDatabase::class.java, "Event2.db"
+                    EventDatabase::class.java, "Event.db"
                 ).build()
-            }
+        }
     }
+
+//     Fungsi untuk menghapus database
+//    companion object {
+//        @Volatile
+//        private var instance: EventDatabase? = null
+//        fun getInstance(context: Context): EventDatabase {
+//            instance ?: synchronized(this) {
+//                instance ?: Room.databaseBuilder(
+//                    context.applicationContext,
+//                    EventDatabase::class.java, "Event2.db"
+//                ).build()
+//            }
+//            val dbPath = context.getDatabasePath("Event2.db")
+//            dbPath.delete()
+//            return instance as EventDatabase
+//        }
+//    }
 }

@@ -43,7 +43,7 @@ class EventViewModel(private val eventRepository: EventRepository) : ViewModel()
 
     fun getFinished() = eventRepository.getFinished()
 
-    fun updateBookmarkEvent(id: String, bookmarkState: Boolean) = eventRepository.updateBookmarkEvent(id, bookmarkState)
+    fun updateFavoriteEvent(id: String, favoriteState: Boolean) = eventRepository.updateFavoriteEvent(id, favoriteState)
 
 //    fun saveEvent(event: EventEntity) {
 //        eventRepository.setBookmarkedEvent(event, true)
