@@ -37,6 +37,8 @@ class EventViewModel(private val eventRepository: EventRepository) : ViewModel()
         })
     }
 
+    fun getFinishedById(id: String) = eventRepository.getFinishedById(id)
+
     fun getUpComing() = eventRepository.getUpComing()
 
     fun getFinished() = eventRepository.getFinished()

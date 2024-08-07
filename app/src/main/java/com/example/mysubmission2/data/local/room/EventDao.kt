@@ -18,6 +18,9 @@ interface EventDao {
     @Query("SELECT * FROM event where bookmarked = 1")
     fun getBookmarkedEvent(): LiveData<List<EventEntity>>
 
+    @Query("SELECT * FROM event where id = :id")
+    fun getFinishedById(id: String): LiveData<EventEntity>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertUpcoming(event: List<EventEntity>)
 

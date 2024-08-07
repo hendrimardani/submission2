@@ -45,7 +45,7 @@ class DetailActivity : AppCompatActivity() {
         val factory: ViewModelFactory = ViewModelFactory.getInstance(this)
         val viewModel: EventViewModel by viewModels { factory }
         val pref = ButtonDataStoreStateViewModel.getInstance(application.dataStore)
-        val buttonDataStoreViewModel = ViewModelProvider(this, ButtonStateViewModelFactory(pref)).get(
+        val buttonViewModel = ViewModelProvider(this, ButtonStateViewModelFactory(pref)).get(
             ButtonViewModel::class.java
         )
 
@@ -53,39 +53,19 @@ class DetailActivity : AppCompatActivity() {
         val activity = intent.getStringExtra(EXTRA_ACTIVITY)
 
         if (activity == EVENT_ADAPTER) {
-            Log.e("TEST HASIL NAMA", id)
-
-            getFinished(viewModel, id)
+            Log.e(TAG_FINISHED, id)
+            getFinished(viewModel, buttonViewModel, id)
             viewModel.getDetail(id)
             viewModel.detail.observe(this) {
                 getOutputFinished(it)
             }
-            buttonDataStoreViewModel.getButtonState().observe(this) { isFilledImage: Boolean ->
-                if (isFilledImage) {
-                    binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite_filled))
-                } else {
-                    binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite))
-                }
-            }
-            binding.fabDetail.setOnClickListener {
-                if (!isBookmark) {
-                    viewModel.updateBookmarkEvent(id, true)
-                    binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite_filled))
-                    isBookmark = true
-                    buttonDataStoreViewModel.setButtonState(isBookmark)
-                } else {
-                    viewModel.updateBookmarkEvent(id, false)
-                    binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite))
-                    isBookmark = false
-                    buttonDataStoreViewModel.setButtonState(isBookmark)
-                }
-            }
         } else if (activity == UPCOMING_FRAGMENT) {
-            getUpComing(viewModel, id)
+            Log.e(TAG_UPCOMING, id)
+            getUpComing(buttonViewModel, viewModel, id)
         }
     }
 
-    private fun getUpComing(viewModel: EventViewModel, id: String) {
+    private fun getUpComing(buttonViewModel: ButtonViewModel, viewModel: EventViewModel, id: String) {
         viewModel.getUpComing().observe(this) { result ->
             if (result != null) {
                 when (result) {
@@ -96,7 +76,7 @@ class DetailActivity : AppCompatActivity() {
                         eventData.forEach {
                             getOutputUpcoming(it)
 
-                            getIsBookmarkClikedUpComing(it, viewModel, id)
+                            getIsBookmarkClikedUpComing(buttonViewModel, viewModel, id)
                         }
                     }
                     is Result.Error -> {
@@ -112,7 +92,7 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun getFinished(viewModel: EventViewModel, id: String) {
+    private fun getFinished(viewModel: EventViewModel, buttonViewModel: ButtonViewModel, id: String) {
         viewModel.getFinished().observe(this) { result ->
             if (result != null) {
                 when (result) {
@@ -121,7 +101,7 @@ class DetailActivity : AppCompatActivity() {
                         binding.progressBar.visibility = View.GONE
                         val eventData = result.data
                         eventData.forEach {
-                            getIsBookmarkClikedFinished(viewModel, id)
+                            getIsBookmarkClikedFinished(it, viewModel, buttonViewModel, id)
                         }
                     }
                     is Result.Error -> {
@@ -137,30 +117,50 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun getIsBookmarkClikedUpComing(item: EventEntity, viewModel: EventViewModel, id: String) {
+    private fun getIsBookmarkClikedUpComing(buttonViewModel: ButtonViewModel, viewModel: EventViewModel, id: String) {
+        buttonViewModel.getButtonState().observe(this) { isFilledImage: Boolean ->
+            if (isFilledImage) {
+                binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite_filled))
+            } else {
+                binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite))
+            }
+        }
         binding.fabDetail.setOnClickListener {
             if (!isBookmark) {
                 viewModel.updateBookmarkEvent(id, true)
+                binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite_filled))
                 isBookmark = true
+                buttonViewModel.setButtonState(isBookmark)
             } else {
                 viewModel.updateBookmarkEvent(id, false)
+                binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite))
                 isBookmark = false
+                buttonViewModel.setButtonState(isBookmark)
             }
         }
     }
 
-    private fun getIsBookmarkClikedFinished(viewModel: EventViewModel, id: String) {
-//        binding.fabDetail.setOnClickListener {
-//            if (!isBookmark) {
-//                viewModel.updateBookmarkEvent(id, true)
-//                binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite_filled))
-//                isBookmark = true
-//            } else {
-//                viewModel.updateBookmarkEvent(id, false)
-//                binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite))
-//                isBookmark = false
-//            }
-//        }
+    private fun getIsBookmarkClikedFinished(item: EventEntity, viewModel: EventViewModel, buttonViewModel: ButtonViewModel, id: String) {
+        buttonViewModel.getButtonState().observe(this) { isFilledImage: Boolean ->
+            if (isFilledImage) {
+                binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite_filled))
+            } else {
+                binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite))
+            }
+        }
+        binding.fabDetail.setOnClickListener {
+            if (!isBookmark) {
+                viewModel.updateBookmarkEvent(id, true)
+                binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite_filled))
+                isBookmark = true
+                buttonViewModel.setButtonState(isBookmark)
+            } else {
+                viewModel.updateBookmarkEvent(id, false)
+                binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite))
+                isBookmark = false
+                buttonViewModel.setButtonState(isBookmark)
+            }
+        }
     }
 
     private fun getOutputUpcoming(item: EventEntity) {

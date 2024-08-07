@@ -36,16 +36,15 @@ class EventRepository private constructor(
 //        }
 //    }
 
+    fun getFinishedById(id: String): LiveData<EventEntity> {
+        return eventDao.getFinishedById(id)
+    }
+
     fun updateBookmarkEvent(id: String, bookmarkState: Boolean) {
         appExecutors.diskIO.execute {
             eventDao.updateBookmarkEvent(id, bookmarkState)
         }
     }
-
-    fun getEventFinished(): LiveData<List<EventEntity>> {
-        return eventDao.getEventFinished()
-    }
-
 
     fun getUpComing(): LiveData<Result<List<EventEntity>>> {
         result.value = Result.Loading
