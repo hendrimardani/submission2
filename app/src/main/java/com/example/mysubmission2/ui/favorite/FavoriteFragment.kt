@@ -4,16 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.mysubmission2.R
 import com.example.mysubmission2.adapter.EventAdapter
+import com.example.mysubmission2.data.local.entity.EventEntity
 import com.example.mysubmission2.databinding.FragmentFavoriteBinding
 import com.example.mysubmission2.ui.EventViewModel
 import com.example.mysubmission2.ui.ViewModelFactory
+import kotlinx.coroutines.launch
 
 class FavoriteFragment : Fragment() {
 
@@ -37,20 +37,47 @@ class FavoriteFragment : Fragment() {
         val isLinearLayout = true
 
         val eventAdapter = EventAdapter()
-        getFavorite(viewModel, eventAdapter)
+        getLiveDataFavorite(viewModel, eventAdapter)
 
-        if (isLinearLayout) {
-            binding.rvFavorite.setPadding(0, 0, 0, 120)
-        }
+        if (isLinearLayout) binding.rvFavorite.setPadding(0, 0, 0, 120)
 
-        binding.rvFavorite.apply {
-            layoutManager = LinearLayoutManager(requireActivity())
-            setHasFixedSize(true)
-            adapter = eventAdapter
+        getListFavorite(viewModel, eventAdapter)
+
+
+//        if (itemList.isNotEmpty()) {
+//            isTexViewVisible(false)
+//            binding.rvFavorite.apply {
+//                layoutManager = LinearLayoutManager(requireActivity())
+//                setHasFixedSize(true)
+//                adapter = eventAdapter
+//            }
+//        } else isTexViewVisible(true)
+
+    }
+
+    private fun isTexViewVisible(isVisible: Boolean) {
+        if (isVisible) binding.tvBelumAdaItemFavorite.visibility = View.VISIBLE
+        else binding.tvBelumAdaItemFavorite.visibility = View.GONE
+    }
+
+    private fun getListFavorite(viewModel: EventViewModel, eventAdapter: EventAdapter) {
+        val itemList = ArrayList<EventEntity>()
+        lifecycleScope.launch {
+            viewModel.getListFavorite().forEach {
+                itemList.add(it)
+            }
+            if (itemList.isNotEmpty()) {
+                isTexViewVisible(false)
+                binding.rvFavorite.apply {
+                    layoutManager = LinearLayoutManager(requireActivity())
+                    setHasFixedSize(true)
+                    adapter = eventAdapter
+                }
+            } else isTexViewVisible(true)
         }
     }
 
-    private fun getFavorite(viewModel: EventViewModel, eventAdapter: EventAdapter) {
+    private fun getLiveDataFavorite(viewModel: EventViewModel, eventAdapter: EventAdapter) {
         viewModel.getFavorite().observe(requireActivity()) { listEventEntity ->
             eventAdapter.submitList(listEventEntity)
         }
@@ -59,5 +86,9 @@ class FavoriteFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private const val TAG = "FavoriteFragment TEST TEST"
     }
 }

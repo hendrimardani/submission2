@@ -46,6 +46,7 @@ glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-lifecycle-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref =  "lifecycleRuntime"}
+androidx-room-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomCompiler" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

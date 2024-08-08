@@ -21,6 +21,9 @@ interface EventDao {
     @Query("SELECT * FROM event WHERE favorite = 1")
     fun getFavorite(): LiveData<List<EventEntity>>
 
+    @Query("SELECT * FROM event WHERE favorite = 1")
+    suspend fun getListFavorite(): List<EventEntity>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertUpcoming(event: List<EventEntity>)
 

@@ -40,6 +40,10 @@ class EventRepository private constructor(
         return eventDao.getFavorite()
     }
 
+    suspend fun getListFavorite(): List<EventEntity> {
+        return eventDao.getListFavorite()
+    }
+
     fun getUpComing(): LiveData<Result<List<EventEntity>>> {
         result.value = Result.Loading
         val client = apiService.getUpcoming()

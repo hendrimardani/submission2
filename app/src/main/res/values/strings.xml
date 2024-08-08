@@ -6,4 +6,5 @@
     <string name="title_finished">Finished</string>
     <string name="title_favorite">Favorite</string>
     <string name="description">Description</string>
+    <string name="tv_favorite">Belum ada item favorite</string>
 </resources>
