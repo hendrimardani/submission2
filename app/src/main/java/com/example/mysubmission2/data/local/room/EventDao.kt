@@ -18,17 +18,11 @@ interface EventDao {
     @Query("SELECT * FROM event where favorite = 1")
     fun getBookmarkedEvent(): LiveData<List<EventEntity>>
 
-    @Query("SELECT * FROM event where id = :id")
-    fun getFinishedById(id: String): LiveData<EventEntity>
-
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertUpcoming(event: List<EventEntity>)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertFinished(event: List<EventEntity>)
-
-//    @Update
-//    fun updateEvent(event: EventEntity)
 
     @Query("UPDATE event SET favorite = :newFavorite WHERE id = :id")
     fun updateFavoriteEvent(id: String, newFavorite: Boolean)
@@ -37,5 +31,5 @@ interface EventDao {
     fun deleteAll()
 
     @Query("SELECT EXISTS(SELECT * FROM event WHERE id = :id AND favorite = 1)")
-    fun isEventFavorite(id: String): Boolean
+    fun isEventFavorite(id: String): LiveData<Boolean>
 }

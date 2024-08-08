@@ -36,8 +36,8 @@ class EventRepository private constructor(
 //        }
 //    }
 
-    fun getFinishedById(id: String): LiveData<EventEntity> {
-        return eventDao.getFinishedById(id)
+    fun isEventFavorite(id: String): LiveData<Boolean> {
+        return eventDao.isEventFavorite(id)
     }
 
     fun updateFavoriteEvent(id: String, favoriteState: Boolean) {
@@ -56,7 +56,6 @@ class EventRepository private constructor(
                     val eventList = ArrayList<EventEntity>()
                     appExecutors.diskIO.execute {
                         listComingItem?.forEach { item ->
-                            val isBookmarked = eventDao.isEventFavorite(item.id.toString())
                             val event = EventEntity(
                                 item.id.toString(),
                                 item.name,
@@ -65,7 +64,7 @@ class EventRepository private constructor(
                                 item.mediaCover,
                                 item.quota.toString(),
                                 item.beginTime,
-                                isBookmarked
+                                false
                             )
                             eventList.add(event)
                         }
@@ -97,7 +96,6 @@ class EventRepository private constructor(
                     val eventList = ArrayList<EventEntity>()
                     appExecutors.diskIO.execute {
                         listFinishedItem?.forEach { item ->
-                            val isBookmarked = eventDao.isEventFavorite(item.id.toString())
                             val event = EventEntity(
                                 item.id.toString(),
                                 item.name,
@@ -106,7 +104,7 @@ class EventRepository private constructor(
                                 item.mediaCover,
                                 item.quota.toString(),
                                 item.beginTime,
-                                isBookmarked
+                                false
                             )
                             eventList.add(event)
                         }

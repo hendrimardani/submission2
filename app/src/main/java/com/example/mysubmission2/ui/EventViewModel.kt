@@ -37,21 +37,13 @@ class EventViewModel(private val eventRepository: EventRepository) : ViewModel()
         })
     }
 
-    fun getFinishedById(id: String) = eventRepository.getFinishedById(id)
-
     fun getUpComing() = eventRepository.getUpComing()
 
     fun getFinished() = eventRepository.getFinished()
 
     fun updateFavoriteEvent(id: String, favoriteState: Boolean) = eventRepository.updateFavoriteEvent(id, favoriteState)
 
-//    fun saveEvent(event: EventEntity) {
-//        eventRepository.setBookmarkedEvent(event, true)
-//    }
-//
-//    fun deleteEvent(event: EventEntity) {
-//        eventRepository.setBookmarkedEvent(event, false)
-//    }
+    fun isEventFavorite(id: String) = eventRepository.isEventFavorite(id)
 
     companion object {
         const val TAG = "EventViewModel Test Data"

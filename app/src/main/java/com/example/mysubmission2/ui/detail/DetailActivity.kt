@@ -44,24 +44,28 @@ class DetailActivity : AppCompatActivity() {
 
         val factory: ViewModelFactory = ViewModelFactory.getInstance(this)
         val viewModel: EventViewModel by viewModels { factory }
-        val pref = ButtonDataStoreStateViewModel.getInstance(application.dataStore)
-        val buttonViewModel = ViewModelProvider(this, ButtonStateViewModelFactory(pref)).get(
-            ButtonViewModel::class.java
-        )
 
         val id = intent.getStringExtra(EXTRA_ID).toString()
         val activity = intent.getStringExtra(EXTRA_ACTIVITY)
 
         if (activity == EVENT_ADAPTER) {
             Log.e(TAG_FINISHED, id)
-            getFinished(viewModel, buttonViewModel, id)
+            getFinished(viewModel, id)
+            getIsFavorite(viewModel, id)
+            viewModel.isEventFavorite(id).observe(this) { isFavorite ->
+                setFiiledFavorite(isFavorite)
+            }
         } else if (activity == UPCOMING_FRAGMENT) {
             Log.e(TAG_UPCOMING, id)
-            getUpComing(buttonViewModel, viewModel, id)
+            getUpComing(viewModel)
+            getIsFavorite(viewModel, id)
+            viewModel.isEventFavorite(id).observe(this) { isFavorite ->
+                setFiiledFavorite(isFavorite)
+            }
         }
     }
 
-    private fun getUpComing(buttonViewModel: ButtonViewModel, viewModel: EventViewModel, id: String) {
+    private fun getUpComing(viewModel: EventViewModel) {
         viewModel.getUpComing().observe(this) { result ->
             if (result != null) {
                 when (result) {
@@ -71,8 +75,6 @@ class DetailActivity : AppCompatActivity() {
                         val eventData = result.data
                         eventData.forEach {
                             getOutputUpcoming(it)
-
-                            getIsBookmarkClikedUpComing(buttonViewModel, viewModel, id)
                         }
                     }
                     is Result.Error -> {
@@ -88,38 +90,16 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun getFinished(viewModel: EventViewModel, buttonViewModel: ButtonViewModel, id: String) {
+    private fun getFinished(viewModel: EventViewModel, id: String) {
         viewModel.getFinished().observe(this) { result ->
             if (result != null) {
                 when (result) {
                     is Result.Loading -> binding.progressBar.visibility = View.VISIBLE
                     is Result.Success -> {
                         binding.progressBar.visibility = View.GONE
-                        buttonViewModel.getButtonState().observe(this) { isFilledImage: Boolean ->
-                            if (isFilledImage) {
-                                binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite_filled))
-                            }
-                            else {
-                                binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite))
-                            }
-                        }
-
                         viewModel.getDetail(id)
                         viewModel.detail.observe(this) {
                             getOutputFinished(it)
-                            binding.fabDetail.setOnClickListener {
-                                if (!isFavorite) {
-                                    viewModel.updateFavoriteEvent(id, true)
-                                    binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite_filled))
-                                    isFavorite = true
-                                    buttonViewModel.setButtonState(isFavorite)
-                                } else {
-                                    viewModel.updateFavoriteEvent(id, false)
-                                    binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite))
-                                    isFavorite = false
-                                    buttonViewModel.setButtonState(isFavorite)
-                                }
-                            }
                         }
                     }
                     is Result.Error -> {
@@ -135,50 +115,18 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun getIsBookmarkClikedUpComing(buttonViewModel: ButtonViewModel, viewModel: EventViewModel, id: String) {
-        buttonViewModel.getButtonState().observe(this) { isFilledImage: Boolean ->
-            if (isFilledImage) {
-                binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite_filled))
-            } else {
-                binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite))
-            }
-        }
+    private fun getIsFavorite(viewModel: EventViewModel, id: String) {
         binding.fabDetail.setOnClickListener {
-            if (!isFavorite) {
-                viewModel.updateFavoriteEvent(id, true)
-                binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite_filled))
-                isFavorite = true
-                buttonViewModel.setButtonState(isFavorite)
-            } else {
-                viewModel.updateFavoriteEvent(id, false)
-                binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite))
-                isFavorite = false
-                buttonViewModel.setButtonState(isFavorite)
-            }
+            isFavorite = !isFavorite
+            viewModel.updateFavoriteEvent(id, isFavorite)
         }
     }
 
-    private fun getIsBookmarkClikedFinished(viewModel: EventViewModel, buttonViewModel: ButtonViewModel, id: String) {
-        buttonViewModel.getButtonState().observe(this) { isFilledImage: Boolean ->
-            if (isFilledImage) {
-                binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite_filled))
-            }
-            else {
-                binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite))
-            }
-        }
-        binding.fabDetail.setOnClickListener {
-            if (!isFavorite) {
-                viewModel.updateFavoriteEvent(id, true)
-                binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite_filled))
-                isFavorite = true
-                buttonViewModel.setButtonState(isFavorite)
-            } else {
-                viewModel.updateFavoriteEvent(id, false)
-                binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite))
-                isFavorite = false
-                buttonViewModel.setButtonState(isFavorite)
-            }
+    private fun setFiiledFavorite(isFavorite: Boolean) {
+        if (isFavorite) {
+            binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite_filled))
+        } else {
+            binding.fabDetail.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_favorite))
         }
     }
 
