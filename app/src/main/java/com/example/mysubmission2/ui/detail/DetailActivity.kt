@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.mysubmission2.R
 import com.example.mysubmission2.adapter.EventAdapter.Companion.EVENT_ADAPTER
@@ -18,12 +17,8 @@ import com.example.mysubmission2.data.Result
 import com.example.mysubmission2.data.local.entity.EventEntity
 import com.example.mysubmission2.data.remote.response.Detail
 import com.example.mysubmission2.databinding.ActivityDetailBinding
-import com.example.mysubmission2.ui.datastore.ButtonDataStoreStateViewModel
 import com.example.mysubmission2.ui.EventViewModel
 import com.example.mysubmission2.ui.ViewModelFactory
-import com.example.mysubmission2.ui.datastore.ButtonStateViewModelFactory
-import com.example.mysubmission2.ui.datastore.ButtonViewModel
-import com.example.mysubmission2.ui.datastore.dataStore
 import com.example.mysubmission2.ui.upcoming.UpcomingFragment.Companion.UPCOMING_FRAGMENT
 
 class DetailActivity : AppCompatActivity() {

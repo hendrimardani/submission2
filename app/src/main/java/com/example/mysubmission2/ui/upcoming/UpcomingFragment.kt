@@ -45,8 +45,6 @@ class UpcomingFragment : Fragment(), View.OnClickListener {
         getUpComing(viewModel)
 
         binding.cvUpcoming.setOnClickListener(this)
-
-//        viewModel.deleteTable()
     }
 
     private fun getUpComing(viewModel: EventViewModel) {

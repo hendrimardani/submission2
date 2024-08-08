@@ -15,8 +15,11 @@ interface EventDao {
     @Query("SELECT * FROM event ORDER BY id ASC")
     fun getEventFinished(): LiveData<List<EventEntity>>
 
-    @Query("SELECT * FROM event where favorite = 1")
+    @Query("SELECT * FROM event WHERE favorite = 1")
     fun getBookmarkedEvent(): LiveData<List<EventEntity>>
+
+    @Query("SELECT * FROM event WHERE favorite = 1")
+    fun getFavorite(): LiveData<List<EventEntity>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertUpcoming(event: List<EventEntity>)

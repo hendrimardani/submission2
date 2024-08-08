@@ -25,16 +25,6 @@ class EventRepository private constructor(
 ) {
     private val result = MediatorLiveData<Result<List<EventEntity>>>()
 
-    fun getBookmarkedEvent(): LiveData<List<EventEntity>> {
-        return eventDao.getBookmarkedEvent()
-    }
-
-//    fun setBookmarkedEvent(event: EventEntity, bookmarkState: Boolean) {
-//        appExecutors.diskIO.execute {
-//            event.isBookmarked = bookmarkState
-//            eventDao.updateEvent(event)
-//        }
-//    }
 
     fun isEventFavorite(id: String): LiveData<Boolean> {
         return eventDao.isEventFavorite(id)
@@ -44,6 +34,10 @@ class EventRepository private constructor(
         appExecutors.diskIO.execute {
             eventDao.updateFavoriteEvent(id, favoriteState)
         }
+    }
+
+    fun getFavorite(): LiveData<List<EventEntity>> {
+        return eventDao.getFavorite()
     }
 
     fun getUpComing(): LiveData<Result<List<EventEntity>>> {

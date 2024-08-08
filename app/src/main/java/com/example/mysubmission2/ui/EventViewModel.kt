@@ -41,6 +41,8 @@ class EventViewModel(private val eventRepository: EventRepository) : ViewModel()
 
     fun getFinished() = eventRepository.getFinished()
 
+    fun getFavorite() = eventRepository.getFavorite()
+
     fun updateFavoriteEvent(id: String, favoriteState: Boolean) = eventRepository.updateFavoriteEvent(id, favoriteState)
 
     fun isEventFavorite(id: String) = eventRepository.isEventFavorite(id)
