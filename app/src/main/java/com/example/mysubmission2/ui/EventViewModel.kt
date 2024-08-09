@@ -42,7 +42,7 @@ class EventViewModel(private val eventRepository: EventRepository) : ViewModel()
     fun getFinished() = eventRepository.getFinished()
 
     fun getFavorite() = eventRepository.getFavorite()
-
+z
     suspend fun getListFavorite() = eventRepository.getListFavorite()
 
     fun updateFavoriteEvent(id: String, favoriteState: Boolean) = eventRepository.updateFavoriteEvent(id, favoriteState)

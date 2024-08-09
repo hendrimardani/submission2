@@ -14,6 +14,8 @@ import com.example.mysubmission2.data.remote.response.SearchResponse
 import com.example.mysubmission2.data.remote.response.UpcomingResponse
 import com.example.mysubmission2.data.remote.retrofit.ApiService
 import com.example.mysubmission2.utils.AppExecutors
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -26,17 +28,15 @@ class EventRepository private constructor(
     private val result = MediatorLiveData<Result<List<EventEntity>>>()
 
 
-    fun isEventFavorite(id: String): LiveData<Boolean> {
+    suspend fun isEventFavorite(id: String): LiveData<Boolean> {
         return eventDao.isEventFavorite(id)
     }
 
-    fun updateFavoriteEvent(id: String, favoriteState: Boolean) {
-        appExecutors.diskIO.execute {
-            eventDao.updateFavoriteEvent(id, favoriteState)
-        }
+    suspend fun updateFavoriteEvent(id: String, favoriteState: Boolean) {
+        return eventDao.updateFavoriteEvent(id, favoriteState)
     }
 
-    fun getFavorite(): LiveData<List<EventEntity>> {
+    suspend fun getFavorite(): LiveData<List<EventEntity>> {
         return eventDao.getFavorite()
     }
 
@@ -44,81 +44,87 @@ class EventRepository private constructor(
         return eventDao.getListFavorite()
     }
 
-    fun getUpComing(): LiveData<Result<List<EventEntity>>> {
-        result.value = Result.Loading
-        val client = apiService.getUpcoming()
-        client.enqueue(object : Callback<UpcomingResponse> {
-            override fun onResponse(call: Call<UpcomingResponse>, response: Response<UpcomingResponse>) {
-                if (response.isSuccessful) {
-                    val listComingItem = response.body()?.listUpcomingItem
-                    val eventList = ArrayList<EventEntity>()
-                    appExecutors.diskIO.execute {
-                        listComingItem?.forEach { item ->
-                            val event = EventEntity(
-                                item.id.toString(),
-                                item.name,
-                                item.summary,
-                                item.description,
-                                item.mediaCover,
-                                item.quota.toString(),
-                                item.beginTime,
-                                false
-                            )
-                            eventList.add(event)
+    suspend fun getUpComing(): LiveData<Result<List<EventEntity>>> {
+        withContext(Dispatchers.IO) {
+            result.value = Result.Loading
+            val client = apiService.getUpcoming()
+            client.enqueue(object : Callback<UpcomingResponse> {
+                override fun onResponse(
+                    call: Call<UpcomingResponse>,
+                    response: Response<UpcomingResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        val listComingItem = response.body()?.listUpcomingItem
+                        val eventList = ArrayList<EventEntity>()
+                        appExecutors.diskIO.execute {
+                            listComingItem?.forEach { item ->
+                                val event = EventEntity(
+                                    item.id.toString(),
+                                    item.name,
+                                    item.summary,
+                                    item.description,
+                                    item.mediaCover,
+                                    item.quota.toString(),
+                                    item.beginTime,
+                                    false
+                                )
+                                eventList.add(event)
+                            }
+                            eventDao.deleteAll()
+                            eventDao.insertUpcoming(eventList)
                         }
-                        eventDao.deleteAll()
-                        eventDao.insertUpcoming(eventList)
                     }
                 }
-            }
 
-            override fun onFailure(call: Call<UpcomingResponse>, t: Throwable) {
-                result.value = Result.Error(t.message.toString())
+                override fun onFailure(call: Call<UpcomingResponse>, t: Throwable) {
+                    result.value = Result.Error(t.message.toString())
+                }
+            })
+            val localData = eventDao.getEventUpComing()
+            result.addSource(localData) { eventData: List<EventEntity> ->
+                result.value = Result.Success(eventData)
             }
-        })
-        val localData = eventDao.getEventUpComing()
-        result.addSource(localData) { eventData: List<EventEntity> ->
-            result.value = Result.Success(eventData)
         }
-
         return result
     }
 
-    fun getFinished(): LiveData<Result<List<EventEntity>>> {
-        result.value = Result.Loading
-        val client = apiService.getFinished()
-        client.enqueue(object : Callback<FinishedResponse> {
-            override fun onResponse(call: Call<FinishedResponse>, response: Response<FinishedResponse>) {
-                if (response.isSuccessful) {
-                    val listFinishedItem = response.body()?.listFinishedItem
-                    val eventList = ArrayList<EventEntity>()
-                    appExecutors.diskIO.execute {
-                        listFinishedItem?.forEach { item ->
-                            val event = EventEntity(
-                                item.id.toString(),
-                                item.name,
-                                item.summary,
-                                item.description,
-                                item.mediaCover,
-                                item.quota.toString(),
-                                item.beginTime,
-                                false
-                            )
-                            eventList.add(event)
+    suspend fun getFinished(): LiveData<Result<List<EventEntity>>> {
+        withContext(Dispatchers.IO) {
+            result.value = Result.Loading
+            val client = apiService.getFinished()
+            client.enqueue(object : Callback<FinishedResponse> {
+                override fun onResponse(call: Call<FinishedResponse>, response: Response<FinishedResponse>) {
+                    if (response.isSuccessful) {
+                        val listFinishedItem = response.body()?.listFinishedItem
+                        val eventList = ArrayList<EventEntity>()
+                        appExecutors.diskIO.execute {
+                            listFinishedItem?.forEach { item ->
+                                val event = EventEntity(
+                                    item.id.toString(),
+                                    item.name,
+                                    item.summary,
+                                    item.description,
+                                    item.mediaCover,
+                                    item.quota.toString(),
+                                    item.beginTime,
+                                    false
+                                )
+                                eventList.add(event)
+                            }
+                            eventDao.deleteAll()
+                            eventDao.insertFinished(eventList)
                         }
-                        eventDao.deleteAll()
-                        eventDao.insertFinished(eventList)
                     }
                 }
-            }
 
-            override fun onFailure(call: Call<FinishedResponse>, t: Throwable) {
-                result.value = Result.Error(t.message.toString())
+                override fun onFailure(call: Call<FinishedResponse>, t: Throwable) {
+                    result.value = Result.Error(t.message.toString())
+                }
+            })
+            val localData = eventDao.getEventFinished()
+            result.addSource(localData) { eventData: List<EventEntity> ->
+                result.value = Result.Success(eventData)
             }
-        })
-        val localData = eventDao.getEventFinished()
-        result.addSource(localData) { eventData: List<EventEntity> ->
-            result.value = Result.Success(eventData)
         }
         return result
     }

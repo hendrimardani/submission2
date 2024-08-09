@@ -10,32 +10,29 @@ import com.example.mysubmission2.data.local.entity.EventEntity
 @Dao
 interface EventDao {
     @Query("SELECT * FROM event ORDER BY id ASC")
-    fun getEventUpComing(): LiveData<List<EventEntity>>
+    suspend fun getEventUpComing(): LiveData<List<EventEntity>>
 
     @Query("SELECT * FROM event ORDER BY id ASC")
-    fun getEventFinished(): LiveData<List<EventEntity>>
+    suspend fun getEventFinished(): LiveData<List<EventEntity>>
 
     @Query("SELECT * FROM event WHERE favorite = 1")
-    fun getBookmarkedEvent(): LiveData<List<EventEntity>>
-
-    @Query("SELECT * FROM event WHERE favorite = 1")
-    fun getFavorite(): LiveData<List<EventEntity>>
+    suspend fun getFavorite(): LiveData<List<EventEntity>>
 
     @Query("SELECT * FROM event WHERE favorite = 1")
     suspend fun getListFavorite(): List<EventEntity>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertUpcoming(event: List<EventEntity>)
+    suspend fun insertUpcoming(event: ArrayList<EventEntity>)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertFinished(event: List<EventEntity>)
+    suspend fun insertFinished(event: List<EventEntity>)
 
     @Query("UPDATE event SET favorite = :newFavorite WHERE id = :id")
-    fun updateFavoriteEvent(id: String, newFavorite: Boolean)
+    suspend fun updateFavoriteEvent(id: String, newFavorite: Boolean)
 
     @Query("DELETE FROM event WHERE favorite = 0")
-    fun deleteAll()
+    suspend fun deleteAll(): LiveData<EventEntity>
 
     @Query("SELECT EXISTS(SELECT * FROM event WHERE id = :id AND favorite = 1)")
-    fun isEventFavorite(id: String): LiveData<Boolean>
+    suspend fun isEventFavorite(id: String): LiveData<Boolean>
 }
