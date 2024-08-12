@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.example.mysubmission2.R
@@ -16,6 +18,9 @@ import com.example.mysubmission2.ui.EventViewModel
 import com.example.mysubmission2.ui.ViewModelFactory
 import com.example.mysubmission2.data.Result
 import com.example.mysubmission2.data.local.entity.EventEntity
+import com.example.mysubmission2.datastore.theme.SettingPreferences
+import com.example.mysubmission2.datastore.theme.ThemeViewModel
+import com.example.mysubmission2.datastore.theme.dataStore
 import com.example.mysubmission2.ui.detail.DetailActivity.Companion.EXTRA_ACTIVITY
 import com.example.mysubmission2.ui.detail.DetailActivity.Companion.EXTRA_ID
 
@@ -44,7 +49,20 @@ class UpcomingFragment : Fragment(), View.OnClickListener {
 
         getUpComing(viewModel)
 
+        getSavedTheme()
+
         binding.cvUpcoming.setOnClickListener(this)
+    }
+
+    private fun getSavedTheme() {
+        val pref = SettingPreferences.getInstance(requireActivity().dataStore)
+        val themeViewModel = ViewModelProvider(requireActivity(), com.example.mysubmission2.datastore.theme.ViewModelFactory(pref)).get(
+            ThemeViewModel::class.java
+        )
+        themeViewModel.getThemeSettings().observe(requireActivity()) { isDarkModeActive ->
+            if (isDarkModeActive) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
     }
 
     private fun getUpComing(viewModel: EventViewModel) {
