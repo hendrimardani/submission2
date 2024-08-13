@@ -24,7 +24,7 @@ import com.example.mysubmission2.ui.upcoming.UpcomingFragment.Companion.UPCOMING
 class DetailActivity : AppCompatActivity() {
     private var _binding: ActivityDetailBinding? = null
     private val binding get() = _binding!!
-    var isFavorite = false
+    private var isFavorite = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -4,12 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.mysubmission2.R
 import com.example.mysubmission2.adapter.EventAdapter
 import com.example.mysubmission2.databinding.FragmentFavoriteBinding
 import com.example.mysubmission2.ui.EventViewModel

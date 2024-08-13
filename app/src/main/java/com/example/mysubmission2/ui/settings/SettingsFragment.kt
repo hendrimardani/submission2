@@ -3,6 +3,7 @@ package com.example.mysubmission2.ui.settings
 import android.Manifest
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -58,9 +59,8 @@ class SettingsFragment : Fragment() {
         workManager = WorkManager.getInstance(requireActivity())
 
         val pref = SettingPreferences.getInstance(requireActivity().dataStore)
-        val dataStoreViewModel = ViewModelProvider(requireActivity(), ViewModelFactory(pref)).get(
-            DataStoreViewModel::class.java
-        )
+        val dataStoreViewModel = ViewModelProvider(requireActivity(), ViewModelFactory(pref)
+        )[DataStoreViewModel::class.java]
 
         getSetDarkMode(dataStoreViewModel)
         getSetNotifications(dataStoreViewModel)
@@ -68,10 +68,10 @@ class SettingsFragment : Fragment() {
 
     private fun getSetNotifications(dataStoreViewModel: DataStoreViewModel) {
         dataStoreViewModel.getNotificationSettings().observe(requireActivity()) { isNotificationActive ->
-            if (isNotificationActive) binding.itemSwitchNotifications.isChecked = true
-            else binding.itemSwitchNotifications.isChecked = false
+            binding.itemSwitchNotifications.isChecked = isNotificationActive
         }
         binding.itemSwitchNotifications.setOnCheckedChangeListener { _, isChecked ->
+            Log.e(TAG, isChecked.toString())
             if (isChecked) {
                 startPeriodicTask()
                 dataStoreViewModel.saveNotificationSetting(isChecked)
@@ -118,5 +118,9 @@ class SettingsFragment : Fragment() {
                 Toast.makeText(requireActivity(), "Dark Mode Tidak Aktif", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    companion object {
+        private const val TAG = "SettingsFragment Test"
     }
 }

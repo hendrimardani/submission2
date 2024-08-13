@@ -68,8 +68,6 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.glide)
     implementation(libs.androidx.work.runtime)
-    implementation(libs.android.async.http)
-
 
     // testing
     testImplementation(libs.junit)

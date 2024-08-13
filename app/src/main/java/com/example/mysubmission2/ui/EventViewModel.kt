@@ -5,12 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.mysubmission2.data.EventRepository
-import com.example.mysubmission2.data.Result
-import com.example.mysubmission2.data.local.entity.EventEntity
 import com.example.mysubmission2.data.remote.response.Detail
 import com.example.mysubmission2.data.remote.response.DetailResponse
 import com.example.mysubmission2.data.remote.retrofit.ApiConfig
-import com.example.mysubmission2.data.remote.retrofit.ApiService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

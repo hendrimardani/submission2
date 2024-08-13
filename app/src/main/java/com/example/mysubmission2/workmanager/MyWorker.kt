@@ -10,10 +10,8 @@ import androidx.core.app.NotificationCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.example.mysubmission2.R
-import com.example.mysubmission2.data.remote.response.DetailResponse
 import com.example.mysubmission2.data.remote.response.NewNotificationResponse
 import com.example.mysubmission2.data.remote.retrofit.ApiConfig
-import com.example.mysubmission2.ui.EventViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

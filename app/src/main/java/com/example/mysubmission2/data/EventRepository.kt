@@ -1,16 +1,10 @@
 package com.example.mysubmission2.data
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asFlow
 import com.example.mysubmission2.data.local.entity.EventEntity
 import com.example.mysubmission2.data.local.room.EventDao
-import com.example.mysubmission2.data.remote.response.Detail
-import com.example.mysubmission2.data.remote.response.DetailResponse
 import com.example.mysubmission2.data.remote.response.FinishedResponse
-import com.example.mysubmission2.data.remote.response.SearchResponse
 import com.example.mysubmission2.data.remote.response.UpcomingResponse
 import com.example.mysubmission2.data.remote.retrofit.ApiService
 import com.example.mysubmission2.utils.AppExecutors

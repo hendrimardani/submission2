@@ -8,17 +8,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.mysubmission2.adapter.EventAdapter
 import com.example.mysubmission2.data.Result
-import com.example.mysubmission2.data.local.entity.EventEntity
 import com.example.mysubmission2.databinding.FragmentFinishedBinding
 import com.example.mysubmission2.ui.EventViewModel
 import com.example.mysubmission2.ui.ViewModelFactory
 
-@Suppress("UNREACHABLE_CODE")
 class FinishedFragment : Fragment() {
 
     private var _binding: FragmentFinishedBinding? = null

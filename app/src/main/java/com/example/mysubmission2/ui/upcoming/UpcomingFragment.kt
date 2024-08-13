@@ -58,9 +58,8 @@ class UpcomingFragment : Fragment(), View.OnClickListener {
         val pref = SettingPreferences.getInstance(requireActivity().dataStore)
         val dataStoreViewModel = ViewModelProvider(requireActivity(),
             com.example.mysubmission2.datastore.ViewModelFactory(pref)
-        ).get(
-            DataStoreViewModel::class.java
-        )
+        )[DataStoreViewModel::class.java]
+
         dataStoreViewModel.getThemeSettings().observe(requireActivity()) { isDarkModeActive ->
             if (isDarkModeActive) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
