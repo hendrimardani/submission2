@@ -19,9 +19,12 @@ recyclerview = "1.3.2"
 roomCompiler = "2.6.1"
 roomRuntime = "2.6.1"
 glide = "4.16.0"
-activity = "1.8.0"
+activity = "1.9.1"
 datastorePreferences = "1.1.1"
 lifecycleRuntime = "2.8.4"
+workRuntimeKtx = "2.9.1"
+workRuntime = "2.9.1"
+androidAsyncHttp = "1.4.11"
 
 [libraries]
 androidx-navigation-safe-args-gradle-plugin = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigationFragmentKtx" }
@@ -46,6 +49,10 @@ glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-lifecycle-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref =  "lifecycleRuntime"}
+androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workRuntimeKtx" }
+androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "workRuntime" }
+android-async-http = { module = "com.loopj.android:android-async-http", version.ref = "androidAsyncHttp" }
+
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

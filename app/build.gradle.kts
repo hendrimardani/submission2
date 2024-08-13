@@ -45,6 +45,7 @@ dependencies {
     //room
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.activity)
+    implementation(libs.androidx.work.runtime.ktx)
     ksp(libs.room.compiler)
 
     // retrofit
@@ -66,6 +67,9 @@ dependencies {
     implementation(libs.androidx.lifecycle.lifecycle.runtime.ktx)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.glide)
+    implementation(libs.androidx.work.runtime)
+    implementation(libs.android.async.http)
+
 
     // testing
     testImplementation(libs.junit)
