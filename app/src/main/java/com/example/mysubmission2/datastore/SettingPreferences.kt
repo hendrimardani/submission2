@@ -1,4 +1,4 @@
-package com.example.mysubmission2.datastore.theme
+package com.example.mysubmission2.datastore
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -14,6 +14,7 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "se
 class SettingPreferences private constructor(private val dataStore: DataStore<Preferences>) {
 
     private val THEME_KEY = booleanPreferencesKey("theme_setting")
+    private val NOTIFICATION_KEY = booleanPreferencesKey("notification_setting")
 
     fun getThemeSetting(): Flow<Boolean> {
         return dataStore.data.map {  preferences ->
@@ -21,12 +22,22 @@ class SettingPreferences private constructor(private val dataStore: DataStore<Pr
         }
     }
 
-    suspend fun saveThemeSetting(isDarkModeActive: Boolean) {
+    suspend fun saveThemeSetting(isNotificationActive: Boolean) {
         dataStore.edit { preferences ->
-            preferences[THEME_KEY] = isDarkModeActive
+            preferences[THEME_KEY] = isNotificationActive
+        }
+    }
+    fun getNotificationSetting(): Flow<Boolean> {
+        return dataStore.data.map {  preferences ->
+            preferences[NOTIFICATION_KEY] ?: false
         }
     }
 
+    suspend fun saveNotificationSetting(isNotificationActive: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[NOTIFICATION_KEY] = isNotificationActive
+        }
+    }
 
     companion object {
         @Volatile

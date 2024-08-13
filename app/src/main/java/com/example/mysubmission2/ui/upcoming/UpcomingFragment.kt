@@ -18,9 +18,9 @@ import com.example.mysubmission2.ui.EventViewModel
 import com.example.mysubmission2.ui.ViewModelFactory
 import com.example.mysubmission2.data.Result
 import com.example.mysubmission2.data.local.entity.EventEntity
-import com.example.mysubmission2.datastore.theme.SettingPreferences
-import com.example.mysubmission2.datastore.theme.ThemeViewModel
-import com.example.mysubmission2.datastore.theme.dataStore
+import com.example.mysubmission2.datastore.DataStoreViewModel
+import com.example.mysubmission2.datastore.SettingPreferences
+import com.example.mysubmission2.datastore.dataStore
 import com.example.mysubmission2.ui.detail.DetailActivity.Companion.EXTRA_ACTIVITY
 import com.example.mysubmission2.ui.detail.DetailActivity.Companion.EXTRA_ID
 
@@ -56,10 +56,12 @@ class UpcomingFragment : Fragment(), View.OnClickListener {
 
     private fun getSavedTheme() {
         val pref = SettingPreferences.getInstance(requireActivity().dataStore)
-        val themeViewModel = ViewModelProvider(requireActivity(), com.example.mysubmission2.datastore.theme.ViewModelFactory(pref)).get(
-            ThemeViewModel::class.java
+        val dataStoreViewModel = ViewModelProvider(requireActivity(),
+            com.example.mysubmission2.datastore.ViewModelFactory(pref)
+        ).get(
+            DataStoreViewModel::class.java
         )
-        themeViewModel.getThemeSettings().observe(requireActivity()) { isDarkModeActive ->
+        dataStoreViewModel.getThemeSettings().observe(requireActivity()) { isDarkModeActive ->
             if (isDarkModeActive) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         }

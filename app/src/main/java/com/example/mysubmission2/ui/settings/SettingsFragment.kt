@@ -11,17 +11,16 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.get
 import androidx.work.Constraints
 import androidx.work.Data
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.example.mysubmission2.databinding.FragmentSettingsBinding
-import com.example.mysubmission2.datastore.theme.SettingPreferences
-import com.example.mysubmission2.datastore.theme.ThemeViewModel
-import com.example.mysubmission2.datastore.theme.ViewModelFactory
-import com.example.mysubmission2.datastore.theme.dataStore
+import com.example.mysubmission2.datastore.DataStoreViewModel
+import com.example.mysubmission2.datastore.SettingPreferences
+import com.example.mysubmission2.datastore.ViewModelFactory
+import com.example.mysubmission2.datastore.dataStore
 import com.example.mysubmission2.workmanager.MyWorker
 import java.util.concurrent.TimeUnit
 
@@ -58,23 +57,28 @@ class SettingsFragment : Fragment() {
 
         workManager = WorkManager.getInstance(requireActivity())
 
-
         val pref = SettingPreferences.getInstance(requireActivity().dataStore)
-        val themeViewModel = ViewModelProvider(requireActivity(), ViewModelFactory(pref)).get(
-            ThemeViewModel::class.java
+        val dataStoreViewModel = ViewModelProvider(requireActivity(), ViewModelFactory(pref)).get(
+            DataStoreViewModel::class.java
         )
 
-        getSetDarkMode(themeViewModel)
-        getSetNotifications()
+        getSetDarkMode(dataStoreViewModel)
+        getSetNotifications(dataStoreViewModel)
     }
 
-    private fun getSetNotifications() {
+    private fun getSetNotifications(dataStoreViewModel: DataStoreViewModel) {
+        dataStoreViewModel.getNotificationSettings().observe(requireActivity()) { isNotificationActive ->
+            if (isNotificationActive) binding.itemSwitchNotifications.isChecked = true
+            else binding.itemSwitchNotifications.isChecked = false
+        }
         binding.itemSwitchNotifications.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 startPeriodicTask()
+                dataStoreViewModel.saveNotificationSetting(isChecked)
                 Toast.makeText(requireActivity(), "Notifikasi Aktif", Toast.LENGTH_SHORT).show()
             } else {
                 cancelPeriodicTask()
+                dataStoreViewModel.saveNotificationSetting(isChecked)
                 Toast.makeText(requireActivity(), "Notifikasi Tidak Aktif", Toast.LENGTH_SHORT).show()
             }
         }
@@ -95,8 +99,8 @@ class SettingsFragment : Fragment() {
 
     private fun cancelPeriodicTask() = workManager.cancelWorkById(periodicWorkRequest.id)
 
-    private fun getSetDarkMode(themeViewModel: ThemeViewModel) {
-        themeViewModel.getThemeSettings().observe(requireActivity()) { isDarkModeActive ->
+    private fun getSetDarkMode(dataStoreViewModel: DataStoreViewModel) {
+        dataStoreViewModel.getThemeSettings().observe(requireActivity()) { isDarkModeActive ->
             if (isDarkModeActive) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 binding.itemSwitchDarkMode.isChecked = true
@@ -107,10 +111,10 @@ class SettingsFragment : Fragment() {
         }
         binding.itemSwitchDarkMode.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                themeViewModel.saveThemeSetting(isChecked)
+                dataStoreViewModel.saveThemeSetting(isChecked)
                 Toast.makeText(requireActivity(), "Dark Mode Aktif", Toast.LENGTH_SHORT).show()
             } else {
-                themeViewModel.saveThemeSetting(isChecked)
+                dataStoreViewModel.saveThemeSetting(isChecked)
                 Toast.makeText(requireActivity(), "Dark Mode Tidak Aktif", Toast.LENGTH_SHORT).show()
             }
         }
