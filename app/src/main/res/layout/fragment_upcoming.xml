@@ -6,19 +6,21 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:elevation="@dimen/cardview_elevation"
+    app:cardCornerRadius="@dimen/cornerRadius_cardView_item_list"
     android:layout_marginVertical="@dimen/activity_vertical_margin"
     android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
     tools:context=".ui.upcoming.UpcomingFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_item_list">
 
         <ImageView
             android:id="@+id/iv_upcoming"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:src="@color/material_dynamic_primary50"
+            android:src="@drawable/ic_launcher_background"
             android:contentDescription="@string/image_detail"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
