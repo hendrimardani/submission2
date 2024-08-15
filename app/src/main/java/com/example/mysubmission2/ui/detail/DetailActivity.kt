@@ -1,6 +1,7 @@
 package com.example.mysubmission2.ui.detail
 
 import android.os.Bundle
+import android.text.Html
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -131,7 +132,7 @@ class DetailActivity : AppCompatActivity() {
             .into(binding.ivDetail)
         binding.tvTitleDetail.text = item.name
         binding.tvSummaryDetail.text = item.summary
-        binding.tvDescription.text = item.description
+        binding.tvDescription.text = Html.fromHtml(item.description, Html.FROM_HTML_MODE_LEGACY)
     }
 
     private fun getOutputFinished(item: Detail) {
@@ -140,7 +141,7 @@ class DetailActivity : AppCompatActivity() {
             .into(binding.ivDetail)
         binding.tvTitleDetail.text = item.name
         binding.tvSummaryDetail.text = item.summary
-        binding.tvDescription.text = item.description
+        binding.tvDescription.text = Html.fromHtml(item.description, Html.FROM_HTML_MODE_LEGACY)
     }
 
     override fun onDestroy() {
